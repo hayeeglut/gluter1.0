@@ -1,0 +1,92 @@
+{
+	"pages": [{
+		"path": "pages/user/user",
+		"style": {
+			"navigationBarTitleText": "gluter",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/luntan/luntan",
+		"style": {
+			"navigationBarTitleText": "gluter",
+			"enablePullDownRefresh": true
+		}
+	}, {
+		"path": "pages/kebiao/kebiao",
+		"style": {
+			"navigationBarTitleText": "gluter",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/chengjichaxun/chengjichaxun",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/kaoshichaxun/kaoshichaxun",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/xiudujincheng/xiudujincheng",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/cjdytongzhi/cjdytongzhi",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/shezhi/shezhi",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/luntan/luntan",
+				"iconPath": "static/luntan.png",
+				"selectedIconPath": "static/luntanselected.png",
+				"text": "论坛"
+			},
+			{
+				"pagePath": "pages/kebiao/kebiao",
+				"iconPath": "static/kebiaonormal.png",
+				"selectedIconPath": "static/kebiaoselected1.png",
+				"text": "课表"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"iconPath": "static/me00.png",
+				"selectedIconPath": "static/me01.png",
+				"text": "个人页面"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"background": "#efeff4"
+		}
+	}
+}
