@@ -2,59 +2,78 @@
 	"pages": [{
 		"path": "pages/user/user",
 		"style": {
-			"navigationBarTitleText": "gluter",
+			"navigationBarTitleText": "桂工小帮手",
 			"enablePullDownRefresh": true
 		}
 
 	}, {
 		"path": "pages/luntan/luntan",
 		"style": {
-			"navigationBarTitleText": "gluter",
-			"enablePullDownRefresh": true
+			"navigationBarTitleText": "桂工小帮手",
+			"enablePullDownRefresh": true,
+			"backgroundTextStyle": "dark"
 		}
 	}, {
 		"path": "pages/kebiao/kebiao",
 		"style": {
-			"navigationBarTitleText": "gluter",
+			"navigationBarTitleText": "桂工小帮手",
 			"enablePullDownRefresh": true
 		}
 
 	}, {
 		"path": "pages/chengjichaxun/chengjichaxun",
 		"style": {
-			"navigationBarTitleText": "",
+			"navigationBarTitleText": "成绩查询",
 			"enablePullDownRefresh": false
 		}
 
 	}, {
 		"path": "pages/kaoshichaxun/kaoshichaxun",
 		"style": {
-			"navigationBarTitleText": "",
+			"navigationBarTitleText": "考试查询",
 			"enablePullDownRefresh": false
 		}
 
 	}, {
 		"path": "pages/xiudujincheng/xiudujincheng",
 		"style": {
-			"navigationBarTitleText": "",
+			"navigationBarTitleText": "修读进程",
 			"enablePullDownRefresh": false
 		}
 
 	}, {
 		"path": "pages/cjdytongzhi/cjdytongzhi",
 		"style": {
-			"navigationBarTitleText": "",
+			"navigationBarTitleText": "成绩订阅通知",
 			"enablePullDownRefresh": false
 		}
 
 	}, {
 		"path": "pages/shezhi/shezhi",
 		"style": {
-			"navigationBarTitleText": "",
+			"navigationBarTitleText": "设置",
 			"enablePullDownRefresh": false
 		}
 
-	}],
+	}    ,{
+            "path" : "pages/Tips/Tips",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "帖子详情",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/Fabu/Fabu",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "发布帖子",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+    ],
 	"tabBar": {
 		"color": "#7A7E83",
 		"selectedColor": "#3cc51f",
@@ -87,6 +106,7 @@
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
 			"background": "#efeff4"
-		}
+		},
+		 "lazyCodeLoading": "requiredComponents"
 	}
 }
