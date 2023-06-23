@@ -3,7 +3,7 @@
 		<uni-collapse>
 			<uni-collapse-item :title="item.couresName +' '+ item.examStatus" :show-animation="true"
 				:thumb="isExamEnded(item) ? '/static/icons/blank-check-box.png' : '/static/icons/check-box.png'">
-				<uni-countdown :day="item.examTimeStamps.d" :hour="item.examTimeStamps.hour" :minute="item.examTimeStamps.minute" :second="item.examTimeStamps.second" color="#ffffff" :background-color="item.color" />
+				<uni-countdown :day="item.day" :hour="item.hour" :minute="item.minute" :second="item.second" color="#ffffff" :background-color="item.color" />
 				<view class="examTimeBlock">
 					<text>课程名：{{item.couresName}}\n</text>
 					<text>课程名：{{item.examClassroom}}\n</text>
@@ -18,7 +18,8 @@
 	export default {
 		data() {
 			return {
-				examQuery: [],
+				examQuery: [],//考试时间集合
+				openid:"",//用户openid
 			}
 		},
 		/* 生命周期函数 监听页面加载 */
@@ -28,7 +29,7 @@
 				title: '获取中...'
 			});
 			//首先需要获取用户的openid
-			var openid = uni.getStorageSync('openid');
+			that.openid = uni.getStorageSync('openid');
 			//成功获取openid
 			uni.request({
 				// url: 'https://localhost:8088/examTime/get',
@@ -38,18 +39,22 @@
 				},
 				method: 'POST',
 				data: {
-					openid: openid
+					openid: that.openid
 				},
 				success(res) {
-					console.log(res, '考试查询');
 					//说明获取成功,直接将考试查询进行存取
 					uni.hideLoading();
+					//将返回值存入examQuery
 					that.examQuery = res.data.data;
+					console.log(that.examQuery)
+					that.countingDownExam();
 				}
 			});
+			
 		},
+		//页面加载完成后
 		onReady() {
-			this.countingDownExam();
+			
 		},
 		methods: {
 			countingDownExam(){
@@ -59,25 +64,26 @@
 				//获得考试时间列表
 				this.examQuery.forEach((item, index) => {
                     var leftTime = item.examTimeStamp - currentTime; //计算两日期之间相差的毫秒数
+					console.log(item)
                     if (leftTime >= 0) {
                         let day = Math.floor(leftTime / 1000 / 60 / 60 / 24);
                         let hour = Math.floor(leftTime / 1000 / 60 / 60 % 24);
                         let minute = Math.floor(leftTime / 1000 / 60 % 60);
                         let second = Math.floor(leftTime / 1000 % 60);
 						that.$set(item,'color','seagreen');
-						that.$set(item.examTimeStamps,'day',day);
-						that.$set(item.examTimeStamps,'hour',hour);
-						that.$set(item.examTimeStamps,'minute',minute);
-						that.$set(item.examTimeStamps,'second',second);
+						that.$set(item,'day',day);
+						that.$set(item,'hour',hour);
+						that.$set(item,'minute',minute);
+						that.$set(item,'second',second);
                     }else{
 						that.$set(item,'color','red');
-						that.$set(item.examTimeStamps,'day',0);
-						that.$set(item.examTimeStamps,'hour',0);
-						that.$set(item.examTimeStamps,'minute',0);
-						that.$set(item.examTimeStamps,'second',0);
+						that.$set(item,'day',0);
+						that.$set(item,'hour',0);
+						that.$set(item,'minute',0);
+						that.$set(item,'second',0);
 					}
+					console.log(item)
                 })
-				this.examQuery = examQuery;
 			},
 			isExamEnded(res) {
 				//获取开始考试时间戳
