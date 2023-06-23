@@ -12,11 +12,14 @@
 					<view class="upTitle">
 						<!-- 帖子id -->
 						<view class="upTitle_id">
-							{{ item.tipId }}
+							<text style="font-weight: bold;">帖子ID:  </text>{{ item.tipId }}
+						</view>
+						<view class="upTitle_tag">
+							<text style="font-weight: bold;">帖子tag:  </text>{{ item.tipId }}
 						</view>
 						<!-- 时间 -->
 						<view class="lastTime">
-							{{ item.upLoadTime }}
+							<text style="font-weight: bold;">发布时间:  </text>{{ item.upLoadTime }}
 						</view>
 					</view>
 					<!-- 标题 -->
@@ -30,8 +33,8 @@
 
 					<!-- 展示图片 -->
 					<view class="photo">
-						<image mode="scaleToFill" v-for="Tieimage, index1 in item.photoUrlList" :key="index1"
-							:src="Tieimage"></image>
+						<image class="tipImage" mode="scaleToFill" v-for="Tieimage, index1 in item.photoUrlList.slice(0, 2)" :key="index1"
+							:src="this.photoServerUrl+Tieimage"></image>
 					</view>
 				</navigator>
 
@@ -76,7 +79,8 @@
 				//分页数
 				startPage:0,
 				//openid
-				openid:""
+				openid:"",
+				photoServerUrl:"http://124.220.207.245:8080/images/"//图片服务器网址
 				
 			}
 		},
@@ -158,6 +162,16 @@
 		z-index: 0;
 		background-color: #f5f5f5;
 	}
+	
+	/* 图片展示 */
+	.tieZiBaBa .photo {
+		margin-top: 5px;
+	}
+	
+	/* 帖子中每张图片的大小 */
+	.tipImage{
+		width: 50%;
+	}
 
 	.searchTab {
 		padding-top: 10rpx;
@@ -186,6 +200,8 @@
 		/* width: 95%; */
 		background-color: white;
 		padding-left: 0rpx;
+		margin: 0px 5px 5px 5px;
+		border-radius: 10px;
 	}
 
 	/* 标题上面那个东西 */
@@ -195,20 +211,30 @@
 
 	/* 时间 */
 	.tieZiBaBa .upTitle .lastTime {
-		flex: 5;
+
 		font-size: 25rpx;
 		color: #a9a9a9;
 		position: relative;
-		left: 120rpx;
+		width: 50%;
+
+	}
+	/* tag */
+	.tieZiBaBa .upTitle .upTitle_tag{
+
+		font-size: 25rpx;
+		color: #a9a9a9;
+		position: relative;
+		width: 30%;
 	}
 
 	/* 帖子id */
 	.tieZiBaBa .upTitle .upTitle_id {
-		flex: 5;
+
 		font-size: 25rpx;
 		color: #a9a9a9;
 		position: relative;
-		left: 15rpx;
+		width: 20%;
+
 	}
 
 	/* 标题 */
@@ -218,11 +244,23 @@
 		/* height: 60rpx; */
 		margin-bottom: 10rpx;
 		line-height: 60rpx;
-		padding-left: 15rpx;
+		/* padding-left: 15rpx; */
 		font-weight: bold;
 		font-size: large;
 		margin-top: 10rpx;
 		padding-right: 15rpx;
+		
+		/* 展示一部分 */
+		/* 数据展示 */
+		overflow:hidden;
+		
+		text-overflow:ellipsis;
+		
+		display:-webkit-box;
+		
+		-webkit-line-clamp:2;
+		
+		-webkit-box-orient:vertical;
 	}
 
 	.tieZiBaBa .content {
@@ -230,19 +268,22 @@
 		/* background-color: white; */
 		border-radius: 10rpx;
 		height: auto;
-		padding: 10rpx 15rpx 30rpx 15rpx;
+		/* margin: 10rpx 15rpx 30rpx 15rpx; */
+		
+		/* 数据展示 */
+		overflow:hidden;
+		
+		text-overflow:ellipsis;
+		
+		display:-webkit-box;
+		
+		-webkit-line-clamp:4;
+		
+		-webkit-box-orient:vertical;
 	}
 
-	/* 图片展示 */
-	.tieZiBaBa .photo {
-		padding-left: 15 rpx;
-		margin-left: 10rpx;
-	}
 
-	.tieZiBaBa .photo van-image {
-		padding-right: 20rpx;
-		/* border: 1px solid black; */
-	}
+
 
 	/* 点赞 */
 	.dianZan {
