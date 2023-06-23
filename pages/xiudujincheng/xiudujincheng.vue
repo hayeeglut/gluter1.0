@@ -41,9 +41,6 @@
 		    uni.showLoading({
 		        title: '获取中...'
 		    });
-		    var that = this;
-		    //写个新的获取成绩
-			
 		    //首先需要获取用户的openid
 		    var openid = uni.getStorageSync('openid');
 		    //成功获取openid

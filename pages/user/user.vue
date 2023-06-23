@@ -139,7 +139,7 @@
 					}, {
 						"imgurl": "../../static/images/tool_images/kaoshi.png",
 						"name": "考试查询",
-						"navigateUrl": ""
+						"navigateUrl": "../kaoshichaxun/kaoshichaxun"
 					}, {
 						"imgurl": "../../static/images/tool_images/xdjc.png",
 						"name": "修读进程",
