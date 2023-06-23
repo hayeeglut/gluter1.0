@@ -5,32 +5,32 @@
 		<!-- 块级区域 -->
 		<!-- 		<view class=""></view> -->
 		<!-- 帖子区域 -->
-		<view class="tieZiBaBa" v-for="Tiezi,index in liaoTianQu" :key="index">
+		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId">
 			<view class="zongTieZi">
 				<navigator :url="'../Tips/Tips?id=' + index" hover-class="navigator-hover" class="content">
 					<!-- 标题上面那个 -->
 					<view class="upTitle">
 						<!-- 帖子id -->
 						<view class="upTitle_id">
-							{{ Tiezi.tipsNumber }}
+							{{ item.tipId }}
 						</view>
 						<!-- 时间 -->
 						<view class="lastTime">
-							{{ Tiezi.caTime }}
+							{{ item.upLoadTime }}
 						</view>
 					</view>
 					<!-- 标题 -->
 					<view class="title">
-						{{ Tiezi.title }}
+						{{ item.title }}
 					</view>
 
 					<navigator :url="'../Tips/Tips?id=' + index" hover-class="navigator-hover" class="content">
-						{{ Tiezi.content }}
+						{{ item.context }}
 					</navigator>
 
 					<!-- 展示图片 -->
 					<view class="photo">
-						<image mode="scaleToFill" v-for="Tieimage, index1 in Tiezi.photourl" :key="index1"
+						<image mode="scaleToFill" v-for="Tieimage, index1 in item.photoUrlList" :key="index1"
 							:src="Tieimage"></image>
 					</view>
 				</navigator>
@@ -41,16 +41,14 @@
 						<icon size="40rpx" name="chat-o" info=""></icon>
 						<!-- 评论数量计数 -->
 						<view class="reply_number">
-							{{ Tiezi.thisTipReplyCount }}
+							{{ item.replyCount }}
 						</view>
 					</navigator>
 
 					<view class="like">
-						<icon @click="vanIconColorFun" :data-index="index"
-							:color="Tiezi.vanIconColor" size="40rpx" name="like-o" info=""></icon>
 						<!-- 点赞数量计数 -->
 						<view class="like_number">
-							{{ Tiezi.appreciate_love }}
+							{{ item.love }}
 						</view>
 					</view>
 					<!-- 帖子最近更新时间 -->
@@ -60,6 +58,7 @@
 		</view>
 
 		<!-- 发布标签按钮 -->
+		<!-- 看不见吗我随便写的一条东西2023623 16:57 -->
 		<navigator url="../Fabu/Fabu">
 			<view class="faBu">
 				<icon name="upgrade" size="80rpx" color="green"></icon>
@@ -72,19 +71,26 @@
 	export default {
 		data() {
 			return {
-				active: '聊天区',
-				cishu: 8,
-
-				vanIconColor: 'black',
-				caTime: [],
-				liaoTianQu: []
+				//聊天区集合
+				chatAreaList:[],
+				//分页数
+				startPage:0,
+				//openid
+				openid:""
+				
 			}
 		},
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
-			this.onLoadClone3389(options);
+			var that=this;
+			//获取localStorage的openid
+			that.openid=uni.getStorageSync("openid");
+			//首先获取分页帖子
+			that.getTipsByPage()
+			
+			
 		},
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
@@ -119,25 +125,30 @@
 			this.onLoadClone3389(this.options, {});
 		},
 		methods: {
-			/**
-			 * 生命周期函数--监听页面加载
-			 */
-			onLoadClone3389(options) {},
-
+			//分页获取聊天帖子集合
+			getTipsByPage(e){
+				var that=this
+				uni.request({
+					url: "https://172.20.129.4:8088/chatArea/wechat/getTipsByPage",
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					method: 'POST',
+					data: {
+						"openid": that.openid,
+						"startPage":that.startPage
+					},
+					success: (res) => {
+						console.log(res)
+						if(res.data.a){
+						that.chatAreaList=res.data.data
+						}
+					}
+				})
+			},
 			getUserInfo(event) {
 				console.log(event.detail);
 			},
-
-			// 爱心点击事件+让数字也变红
-			vanIconColorFun(e) {
-				var color = this.vanIconColor;
-				var thisIdx = e.target.dataset.index;
-				if (this.liaoTianQu[thisIdx].vanIconColor == 'black') {
-					this.liaoTianQu[thisIdx].vanIconColor = 'red';
-				} else {
-					this.liaoTianQu[thisIdx].vanIconColor = 'black';
-				}
-			}
 		}
 	}
 </script>
