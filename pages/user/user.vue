@@ -35,7 +35,7 @@
 			
 			<scroll-view class="navScroll" scroll-x="true" enable-flex="true">
 				<view class="navItem" v-for="(item,index) in serviceBarArray" :key="index">
-					<view :class="'navContent'+ (!openBoolen ? '' : 'active')"
+					<view class="'navContent':'active'"
 						@click="changeNav" :data-page="index">
 						{{ item }}
 					</view>
