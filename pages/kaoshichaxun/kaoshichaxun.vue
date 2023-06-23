@@ -6,23 +6,59 @@
 				<uni-countdown :day="item.day" :hour="item.hour" :minute="item.minute" :second="item.second" color="#ffffff" :background-color="item.color" />
 				<view class="examTimeBlock">
 					<text>课程名：{{item.couresName}}\n</text>
-					<text>课程名：{{item.examClassroom}}\n</text>
+					<text>考试教室：{{ item.examSchool }} {{ item.examBuilding }} {{item.examClassroom}}\n</text>
 					<text>考试时间：{{item.examDate}} {{item.examTempTime}}</text>
+					<!-- <text @click="details(item)" style="width: 15%; color: green">详情</text> -->
 				</view>
 			</uni-collapse-item>
 		</uni-collapse>
 	</view>
+	
+	
+	<!-- <uni-popup ref="showExamDetails" type="dialog">
+		<uni-popup-dialog cancelText="关闭" title="成绩详细信息" @close="dialogClose" @confirm="dialogConfirm">
+			<view class="examDetails">
+				<view>
+					<text>课程名</text>
+					{{ showInfo.couresName }}
+				</view>
+				<view>
+					<text>课程号</text>
+					{{ showInfo.courseNumber }}
+				</view>
+				<view>
+					<text>考试地点</text>
+					{{ showInfo.examSchool }};
+					{{ showInfo.examBuilding }};
+					{{ showInfo.examClassroom }}
+				</view>
+				<view>
+					<text>考试时间</text>
+					{{ showInfo.examDate }} {{ showInfo.examTempTime }}
+				</view>
+				<view>
+					<text>考试状态</text>
+					{{ showInfo.examStatus }}
+				</view>
+			</view>
+		</uni-popup-dialog>
+	</uni-popup> -->
+	
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
+				//考试详情信息
+				//showInfo: [],
 				examQuery: [],//考试时间集合
 				openid:"",//用户openid
 			}
 		},
-		/* 生命周期函数 监听页面加载 */
+		/**
+		 * 生命周期函数 监听页面加载
+		 */
 		onLoad() {
 			var that = this;
 			uni.showLoading({
@@ -42,21 +78,20 @@
 					openid: that.openid
 				},
 				success(res) {
+					console.log(res,'考试时间')
 					//说明获取成功,直接将考试查询进行存取
 					uni.hideLoading();
 					//将返回值存入examQuery
 					that.examQuery = res.data.data;
-					console.log(that.examQuery)
 					that.countingDownExam();
 				}
 			});
 			
 		},
-		//页面加载完成后
-		onReady() {
-			
-		},
 		methods: {
+			/**
+			 * 获取现在的时间与考试开始时间的时间差
+			 */
 			countingDownExam(){
 				var that = this;
 				//获得现在时间戳
@@ -64,7 +99,6 @@
 				//获得考试时间列表
 				this.examQuery.forEach((item, index) => {
                     var leftTime = item.examTimeStamp - currentTime; //计算两日期之间相差的毫秒数
-					console.log(item)
                     if (leftTime >= 0) {
                         let day = Math.floor(leftTime / 1000 / 60 / 60 / 24);
                         let hour = Math.floor(leftTime / 1000 / 60 / 60 % 24);
@@ -82,9 +116,20 @@
 						that.$set(item,'minute',0);
 						that.$set(item,'second',0);
 					}
-					console.log(item)
                 })
 			},
+			/**
+			 * 详情点击用
+			 * @param {Object} e
+			 */
+			/* details(e) {
+				this.showInfo = e;
+				this.$refs.showExamDetails.open();
+			}, */
+			/**
+			 * 判断当前考试是否结束
+			 * @param {Object} res
+			 */
 			isExamEnded(res) {
 				//获取开始考试时间戳
 				let startExamTime = res.examTimeStamp;
@@ -106,5 +151,16 @@
 	.examTimeBlock {
 		font-size: 30rpx;
 		font-weight: 600;
+	}
+	/* 详情详细信息 */
+	.examDetails {
+		width: 90%;
+		margin: 0 auto;
+		padding: 10rpx 0 0 0;
+	}
+	
+	.examDetails text {
+		margin-right: 20rpx;
+		font-weight: 800;
 	}
 </style>

@@ -33,10 +33,18 @@
 				<view class="classname">1111</view>
 			</view>
 			
+			<scroll-view class="navScroll" scroll-x="true" enable-flex="true">
+				<view class="navItem" v-for="(item,index) in serviceBarArray" :key="index">
+					<view :class="'navContent'+ (!openBoolen ? '' : 'active')"
+						@click="changeNav" :data-page="index">
+						{{ item }}
+					</view>
+				</view>
+			</scroll-view>
+			
 			<view @click="jump" class="keBiaoSimpleShow">
 				<view class="simple_info">
 					<text>今日课表</text>
-					<image class="arrow_right" src="../../static/images/tool_images/arrow-right-up.png"></image>
 				</view>
 				<!-- 滚动条 -->
 				<scroll-view scroll-y="true">
@@ -119,6 +127,11 @@
 				keInfoList: [],
 				month: 0,
 				hours: 0,
+				serviceBarArray: [
+					'常用服务',
+					'账号设置'
+				],
+				openBoolen: false,
 				// 弹出层
 				show: false,
 				show_tongZhi: false,
@@ -490,6 +503,22 @@
 		font-size: 25rpx;
 		text-align: center;
 	}
+	/* 切换栏 */
+	.navScroll {
+	    display: flex;
+	    white-space: nowrap;
+	    height: 75rpx;
+	    font-size: 25rpx;
+	}
+	
+	.navScroll .navItem {
+	    margin: 20rpx 12rpx 0rpx;
+	}
+	
+	.navScroll .navItem .navContent {
+	    padding: 5rpx 25rpx;
+	    line-height: 38rpx;
+	}
 
 	/* 设置里面的东西 */
 	.personInfo .sheZhi {
@@ -515,15 +544,6 @@
 
 	.keBiaoSimpleShow scroll-view {
 		height: 85%;
-	}
-
-	/* 箭头 */
-	.arrow_right {
-		width: 40rpx;
-		height: 40rpx;
-		/* line-height: 70; */
-		float: right;
-		padding: 3rpx 5rpx;
 	}
 
 	/* 今日课表 */
