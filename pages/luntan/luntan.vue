@@ -58,7 +58,7 @@
 		</view>
 
 		<!-- 发布标签按钮 -->
-		<!-- 看不见吗我随便写的一条东西2023623 16:57 -->
+		<!-- 随便写了一点注释17:52 -->
 		<navigator url="../Fabu/Fabu">
 			<view class="faBu">
 				<icon name="upgrade" size="80rpx" color="green"></icon>
