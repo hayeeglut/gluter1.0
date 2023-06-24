@@ -270,7 +270,7 @@
 		height: auto;
 		/* margin: 10rpx 15rpx 30rpx 15rpx; */
 		
-		/* 数据展示 */
+		/* 控制内容展示多少行 */
 		overflow:hidden;
 		
 		text-overflow:ellipsis;
