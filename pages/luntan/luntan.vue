@@ -5,9 +5,9 @@
 		<!-- 块级区域 -->
 		<!-- 		<view class=""></view> -->
 		<!-- 帖子区域 -->
-		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId">
+		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId" @click="jumpToTip(item)">
 			<view class="zongTieZi">
-				<navigator :url="'../Tips/Tips?id=' + index" hover-class="navigator-hover" class="content">
+
 					<!-- 标题上面那个 -->
 					<view class="upTitle">
 						<!-- 帖子id -->
@@ -15,11 +15,11 @@
 							<text style="font-weight: bold;">帖子ID:  </text>{{ item.tipId }}
 						</view>
 						<view class="upTitle_tag">
-							<text style="font-weight: bold;">帖子tag:  </text>{{ item.tipId }}
+							<text style="font-weight: bold;"></text>{{ item.tag }}
 						</view>
 						<!-- 时间 -->
 						<view class="lastTime">
-							<text style="font-weight: bold;">发布时间:  </text>{{ item.upLoadTime }}
+							<text style="font-weight: bold;">更新时间:  </text>{{ item.upDateTime }}
 						</view>
 					</view>
 					<!-- 标题 -->
@@ -27,27 +27,24 @@
 						{{ item.title }}
 					</view>
 
-					<navigator :url="'../Tips/Tips?id=' + index" hover-class="navigator-hover" class="content">
+					<view class="content">
 						{{ item.context }}
-					</navigator>
+					</view>
 
 					<!-- 展示图片 -->
 					<view class="photo">
 						<image class="tipImage" mode="scaleToFill" v-for="Tieimage, index1 in item.photoUrlList.slice(0, 2)" :key="index1"
 							:src="this.photoServerUrl+Tieimage"></image>
 					</view>
-				</navigator>
+
 
 				<!-- 点赞区域 -->
 				<view class="dianZan">
-					<navigator :url="'../Tips/Tips?id=' + index" hover-class="navigator-hover" class="reply">
-						<icon size="40rpx" name="chat-o" info=""></icon>
+						<image class="" src="../../static/chatArea/love.png"></image>
 						<!-- 评论数量计数 -->
 						<view class="reply_number">
 							{{ item.replyCount }}
 						</view>
-					</navigator>
-
 					<view class="like">
 						<!-- 点赞数量计数 -->
 						<view class="like_number">
@@ -70,7 +67,10 @@
 	</view>
 </template>
 
+
 <script>
+	import calculateWeek from "../../utils/calculateWeek.js"
+	
 	export default {
 		data() {
 			return {
@@ -80,7 +80,7 @@
 				startPage:0,
 				//openid
 				openid:"",
-				photoServerUrl:"http://124.220.207.245:8080/images/"//图片服务器网址
+				photoServerUrl:"http://124.220.207.245:8080/images/"//图片服务器
 				
 			}
 		},
@@ -93,8 +93,6 @@
 			that.openid=uni.getStorageSync("openid");
 			//首先获取分页帖子
 			that.getTipsByPage()
-			
-			
 		},
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
@@ -115,20 +113,39 @@
 		/**
 		 * 页面相关事件处理函数--监听用户下拉动作
 		 */
-		onPullDownRefresh: function() {},
+		onPullDownRefresh: function() {
+		},
 		/**
 		 * 页面上拉触底事件的处理函数
 		 */
-		onReachBottom: function() {},
+		onReachBottom: function() {
+			var that=this;
+			console.log("用户触底")
+			that.startPage+=10;
+			//拼接帖子
+			that.getTipsByPage()
+		},
 		/**
 		 * 用户点击右上角分享
 		 */
 		onShareAppMessage: function() {},
 		// 下拉刷新事件
 		onPullDownRefresh(e) {
-			this.onLoadClone3389(this.options, {});
+			var that=this;
+			console.log("用户下拉论坛刷新")
+			uni.redirectTo({
+				url:"/pages/luntan/luntan"
+			})
 		},
 		methods: {
+			//跳转去详细帖子
+			jumpToTip(item){
+				//直接把详细铁存到localStorage
+				uni.setStorageSync("tipDetail",item)
+				uni.navigateTo({
+					url:"/pages/Tips/Tips"
+				})
+			},
 			//分页获取聊天帖子集合
 			getTipsByPage(e){
 				var that=this
@@ -145,7 +162,25 @@
 					success: (res) => {
 						console.log(res)
 						if(res.data.a){
-						that.chatAreaList=res.data.data
+						// that.chatAreaList=res.data.data
+						//成功后需要把data的tag数据进行转换一下
+						for(let i=0;i<res.data.data.length;i++){
+							if(res.data.data[i].tag==0)res.data.data[i].tag="聊天灌水"
+							if(res.data.data[i].tag==1)res.data.data[i].tag="寻物/失物"
+							if(res.data.data[i].tag==2)res.data.data[i].tag="跳蚤市场"
+							if(res.data.data[i].tag==3)res.data.data[i].tag="bug反馈"
+							
+							//转换他的更新时间
+							let currentTime = new Date().getTime();
+							if((currentTime-res.data.data[i].upDateTime)/1000<600)res.data.data[i].upDateTime="十分钟内"
+							if((currentTime-res.data.data[i].upDateTime)/1000<1800)res.data.data[i].upDateTime="三十分钟内"
+							if((currentTime-res.data.data[i].upDateTime)/1000<3600)res.data.data[i].upDateTime="一小时内"
+							if((currentTime-res.data.data[i].upDateTime)/1000<86400)res.data.data[i].upDateTime="一天之内"
+							// 如果比一天还多 这条可以将时间戳转换成日期格式
+							if((currentTime-res.data.data[i].upDateTime)/1000>86400)res.data.data[i].upDateTime=calculateWeek.formatTime(res.data.data[i].upDateTime); 
+							  
+						}
+						Array.prototype.push.apply(that.chatAreaList, res.data.data);
 						}
 					}
 				})
