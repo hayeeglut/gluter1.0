@@ -2,28 +2,28 @@
 	<view class="content">
 		<view class="container">
 			<!-- 标题 -->
-			<textarea placeholder="输入一下标题- -" @blur="inputBlur" :focus="inputFocus" :auto-height="true"
-				:show-confirm-bar="false" maxlength="1500" v-model="form.content" class="post-title"></textarea>
+			<textarea placeholder="写一下标题- -" @blur="inputTitle" :focus="inputTitleFocus" :auto-height="true"
+				:show-confirm-bar="false" maxlength="1500" v-model="form.title" class="post-title"></textarea>
 			<!-- 输入框 -->
 			<textarea placeholder="想说什么就说什么叭- -" @blur="inputBlur" :focus="inputFocus" :auto-height="true"
 				:show-confirm-bar="false" maxlength="1500" v-model="form.content" class="post-txt"></textarea>
 
 			<!-- 上传图片or视频 -->
 			<view class="img-list">
-				<view v-for="(item,index) in form.imageList" :key='index' class="img-list-box">
-					<image v-if="!form.video" :src="item" class="img-item" @tap="imgTypeSelect(item)"></image>
-					<video v-else :src="item" @longpress="videoTypeSelect(item)"></video>
+				<view v-for="(item,index) in imageFileList" :key='index' class="img-list-box">
+					<image v-if="!form.video" :src="item" class="img-item" @tap="imageUpLoad()"></image>
 				</view>
-				<view v-if="form.imageList.length < 9 && !form.video" class="icon-camera" @tap="selectType">
+				<view v-if="form.imageList.length < 9 && !form.video" class="icon-camera" @tap="imageUpLoad()">
 					<uni-icons type="camera-filled" size="27" color=#D3D4D6></uni-icons>
 				</view>
 			</view>
 
-			<!-- 选择位置 -->
-			<view @click="chooseLocation" class="choose-location">
-				<u-icon name="map" size="30rpx"></u-icon>
-				<text class="txt">{{ form.address || '你在哪里?' }}</text>
+			<!-- 选择tag -->
+			<view class="">
+				<kevy-radio :items="items" :fontSize="26" color="#272727" :iconSize="26" iconColor="#4fc08d"
+					:bordered="true" @click="myClick" :checkIndex="0"></kevy-radio>
 			</view>
+
 		</view>
 		<!-- 选择板块 -->
 
@@ -34,115 +34,76 @@
 	</view>
 </template>
 
-
 <script>
 	export default {
 		data() {
 			return {
 				// 默认输入框获得焦点
 				inputFocus: true,
-				nputTitleFocus:true,
+				inputTitleFocus: true,
 				form: {
+					title: "",
 					content: '',
 					address: '',
 					imageList: [],
 					video: '',
-				},		
+				},
+				items: ["聊天灌水", "寻物启事/失物招领", "跳蚤市场", "bug反馈"]
 			}
 		},
 
 		methods: {
-			// 选择媒体类型
-			selectType() {
-				let that = this
-				let itemL = that.form.imageList.length!=0 ? !that.form.imageList.video ? ['拍照', '从相册选择照片']: '' : ['拍照', '从相册选择照片', '从相册选择视频']
-				uni.showActionSheet({
-					itemList: itemL,
+			//图片上传，多张
+			upload_file: function(url, filePath) {
+				var that = this;
+				wx.uploadFile({
+					url: url,
+					filePath: filePath,
+					name: 'upLoadFile',
+					header: {
+						'content-type': 'multipart/form-data'
+					}, // 设置请求的 header
+					formData: {
+						tipId: 1
+					}, // HTTP 请求中其他额外的 form data
 					success: function(res) {
-						if (res.tapIndex == 0) {
-							uni.chooseImage({
-								sourceType: ['camera'], // 拍照选择
-								success: function(res) {
-									that.form.imageList.push(res.tempFilePaths)
-								}
-							});
-						}
-						if (res.tapIndex == 1) {
-							uni.chooseImage({
-								count: 9 - that.form.imageList.length,
-								sourceType: ['album'], //从相册选择
-								success: function(res) {
-									res.tempFilePaths.forEach(path => {
-										that.form.imageList.push(path);
-										// 发给oss 待写
-									})
-								}
-							});
-						}
-						if (res.tapIndex == 2) {
-							uni.chooseVideo({
-								sourceType: ['album'], // 从相册选择视频
-								success: function(res) {
-									if (res.size > 20971520) {
-										uni.showToast({
-											title: "视频文件过大",
-											duration: 2000
-										});
-										return;
-									}
-									that.form.video = true;
-									that.form.imageList.push(res.tempFilePath)
-								}
-							});
-						}
+						wx.showToast({
+							title: "图片修改成功",
+							icon: 'success',
+							duration: 700
+						})
+					},
+					fail: function(res) {}
+				})
+			},
+			//测试图片选择
+			imageUpLoad: function(res) {
+				var that = this;
+				wx.chooseMedia({
+					count: 9,
+					mediaType: ['image'],
+					sourceType: ['album', 'camera'],
+					maxDuration: 30,
+					success(res) {
+						//成功后存入本地
+						that.imageFileList=res.tempFiles;
+						console.log(that.imageFileList)
 					}
-				});
+				})
 			},
 
-			// 图片状态选择
-			imgTypeSelect(item) {
-				let that = this
-				uni.showActionSheet({
-					itemList: ['预览', '删除'],
-					success: function(res) {
-						if (res.tapIndex == 0) {
-							uni.previewImage({
-								current: item,
-								urls: that.form.imageList
-							})
-						}
-						if (res.tapIndex == 1) {
-							let index = that.form.imageList.findIndex(url => url === item);
-							if (index !== -1) {
-								that.form.imageList.splice(index, 1);
-							}
-						}
-					}
-				});
+			//点击事件
+			myClick(idx) {
+				console.log("点击的下标为：" + idx);
 			},
-			
-			// 视频状态选择
-			videoTypeSelect(){
-				uni.showActionSheet({
-					itemList: ['删除'],
-					success: function(res) {
-						if (res.tapIndex == 0) {
-							let index = that.form.imageList.findIndex(url => url === item);
-							if (index !== -1) {
-								that.form.imageList.splice(index, 1);
-							}
-						}
-					}
-				});
-			},
+
 			//标题内容
-				
-			inputTitle(event){
-				this.inputTitle=event.detail.cursor
-				this.inputTitleFocus=false;
-			}
+			inputTitle(event) {
+				this.inputTitleCursor = event.detail.cursor;
+				this.inputTitleFocus = false;
+			},
 			// 文字内容
-			inputContent(event) {
+			inputBlur(event) {
 				this.inputCursor = event.detail.cursor;
 				this.inputFocus = false;
 			},
@@ -159,39 +120,14 @@
 
 			// 发布
 			clickCreate() {
-				console.log(this.form);
-				if (!this.form.content) {
-					uni.showToast({
-						title: "请输入内容噢",
-						icon: "error"
-					})
-					return;
-				}
-				this.$request.post("/api/article/save", {
-					"type": 1,
-					"content": this.form.content,
-				}).then((res) => {
-					if (res.message == '保存成功') {
-						uni.showToast({
-							title: '发布成功',
-							duration: 1500,
-							mask: true
-						});
-						setTimeout(() => {
-							uni.redirectTo({
-								url: '/pages/community/community'
-							});
-						}, 1500)
-					}
-				})
+				var that=this;
+				console.log(that.form)
 			},
 		}
 	}
 </script>
 
-
 <style lang="scss" scoped>
-	
 	.content {
 		height: 100vh;
 		background-color: #FFFFFF;
@@ -203,12 +139,12 @@
 		overflow: hidden;
 	}
 
-		
-	.post-title{
+	.post-title {
 		width: 100%;
 		min-height: 100rpx;
 		line-height: 1rpx;
 	}
+
 	.post-txt {
 		width: 100%;
 		min-height: 300rpx;
@@ -288,5 +224,3 @@
 		border-radius: 6rpx
 	}
 </style>
-
-
