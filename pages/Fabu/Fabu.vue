@@ -8,12 +8,12 @@
 			<textarea placeholder="想说什么就说什么叭- -" @blur="inputBlur" :focus="inputFocus" :auto-height="true"
 				:show-confirm-bar="false" maxlength="1500" v-model="form.content" class="post-txt"></textarea>
 
-			<!-- 上传图片or视频 -->
+			<!-- 上传图片 -->
 			<view class="img-list">
-				<view v-for="(item,index) in imageFileList" :key='index' class="img-list-box">
-					<image v-if="!form.video" :src="item" class="img-item" @tap="imageUpLoad()"></image>
+				<view v-for="(item,index) in form.imageFileList" :key='index' class="img-list-box">
+					<image v-if="!form.video" :src="item.tempFilePath" class="img-item"></image>
 				</view>
-				<view v-if="form.imageList.length < 9 && !form.video" class="icon-camera" @tap="imageUpLoad()">
+				<view v-if="form.imageFileList.length < 9" class="icon-camera" @tap="imageUpLoad()">
 					<uni-icons type="camera-filled" size="27" color=#D3D4D6></uni-icons>
 				</view>
 			</view>
@@ -45,16 +45,24 @@
 					title: "",
 					content: '',
 					address: '',
-					imageList: [],
-					video: '',
+					imageFileList: [],
+					tag:0
 				},
 				items: ["聊天灌水", "寻物启事/失物招领", "跳蚤市场", "bug反馈"]
 			}
 		},
-
+		/**
+		 * 生命周期函数--监听页面加载
+		 */
+		onLoad: function(options) {
+			var that=this;
+			//获取localStorage的openid
+			that.openid=uni.getStorageSync("openid");
+			console.log("openid："+that.openid)
+		},
 		methods: {
 			//图片上传，多张
-			upload_file: function(url, filePath) {
+			upload_file: function(url,filePath,tipId) {
 				var that = this;
 				wx.uploadFile({
 					url: url,
@@ -64,7 +72,7 @@
 						'content-type': 'multipart/form-data'
 					}, // 设置请求的 header
 					formData: {
-						tipId: 1
+						tipId: tipId
 					}, // HTTP 请求中其他额外的 form data
 					success: function(res) {
 						wx.showToast({
@@ -86,15 +94,16 @@
 					maxDuration: 30,
 					success(res) {
 						//成功后存入本地
-						that.imageFileList=res.tempFiles;
-						console.log(that.imageFileList)
+						that.form.imageFileList=res.tempFiles;
+						console.log(that.form.imageFileList)
 					}
 				})
 			},
 
 			//点击事件
 			myClick(idx) {
-				console.log("点击的下标为：" + idx);
+				var that=this;
+				that.form.tag=idx;
 			},
 
 			//标题内容
@@ -122,6 +131,47 @@
 			clickCreate() {
 				var that=this;
 				console.log(that.form)
+				/**
+				 * 点击发布流程，首先向后端传送title，content，tag信息，等待后端回传创建好的tipId
+				 * 然后再一张一张发送图片，图片需要附上tipId
+				 * */
+				 //首先判断title content 是不是空的
+				 if(that.form.content==''){
+					uni.showToast({
+						title:"内容不能为空~",
+						duration:2000
+					}) 
+				 }
+				 if(that.form.title==''){
+					 uni.showToast({
+					 	title:"标题不能为空~",
+					 	duration:2000
+					 }) 
+				 }
+				 //内容齐全
+				 else{
+					 //首先进行title content推送
+					 var that=this;
+					 uni.request({
+					 	url: "https://172.20.129.4:8088/chatArea/wechat/upLoadChatTip",
+					 	header: {
+					 		'content-type': 'application/x-www-form-urlencoded'
+					 	},
+					 	method: 'POST',
+					 	data: {
+					 		openid:that.openid,
+							title:that.form.title,
+							context:that.form.content,
+							tag:that.form.tag,
+							upLoadTime:new Date().valueOf()*1000
+					 	},
+					 	success: (res) => {
+					 		if(res.data.a){
+					 			console.log(res.data.data)
+					 		}
+					 	}
+					 })
+				 }
 			},
 		}
 	}
