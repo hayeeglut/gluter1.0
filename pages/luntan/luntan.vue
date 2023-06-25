@@ -1,7 +1,7 @@
 <template>
 	<view style="height: 100%">
 		<!-- 公告区 -->
-		<uni-notice-bar left-icon="volume-o" text="开发中，不定期更新"></uni-notice-bar>
+		<uni-notice-bar @click="jumpToFaBu()" left-icon="volume-o" text="点我进入发布帖子(暂时)"></uni-notice-bar>
 		<!-- 块级区域 -->
 		<!-- 		<view class=""></view> -->
 		<!-- 帖子区域 -->
@@ -141,6 +141,12 @@
 			})
 		},
 		methods: {
+			//跳转至发布帖子页面
+			jumpToFaBu(){
+				uni.navigateTo({
+					url:"/pages/Fabu/Fabu"
+				})
+			},
 			//跳转去详细帖子
 			jumpToTip(item) {
 				//直接把详细铁存到localStorage
