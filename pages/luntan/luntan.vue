@@ -8,52 +8,50 @@
 		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId" @click="jumpToTip(item)">
 			<view class="zongTieZi">
 
-					<!-- 标题上面那个 -->
-					<view class="upTitle">
-						<!-- 帖子id -->
-						<view class="upTitle_id">
-							<text style="font-weight: bold;">帖子ID:  </text>{{ item.tipId }}
-						</view>
-						<view class="upTitle_tag">
-							<text style="font-weight: bold;"></text>{{ item.tag }}
-						</view>
-						<!-- 时间 -->
-						<view class="lastTime">
-							<text style="font-weight: bold;">更新时间:  </text>{{ item.upDateTime }}
-						</view>
-					</view>
-					<!-- 标题 -->
-					<view class="title">
-						{{ item.title }}
-					</view>
-
-					<view class="content">
-						{{ item.context }}
-					</view>
-
-					<!-- 展示图片 -->
-					<view class="photo">
-						<image class="tipImage" mode="scaleToFill" v-for="Tieimage, index1 in item.photoUrlList.slice(0, 2)" :key="index1"
-							:src="this.photoServerUrl+Tieimage"></image>
-					</view>
-
-
-				<!-- 点赞区域 -->
-				<view class="dianZan">
-						<image class="" src="../../static/chatArea/love.png"></image>
-						<!-- 评论数量计数 -->
-						<view class="reply_number">
-							{{ item.replyCount }}
-						</view>
-					<view class="like">
-						<!-- 点赞数量计数 -->
-						<view class="like_number">
-							{{ item.love }}
-						</view>
-					</view>
-					<!-- 帖子最近更新时间 -->
-					<view class="like_upTime"></view>
+				<!-- 标题 -->
+				<view class="title">
+					{{ item.title }}
 				</view>
+
+				<view class="content">
+					{{ item.context }}
+				</view>
+
+				<!-- 展示图片 -->
+				<view class="photo">
+					<image class="tipImage" mode="aspectFit" v-for="Tieimage, index1 in item.photoUrlList.slice(0, 2)"
+						:key="index1" :src="this.photoServerUrl+Tieimage"></image>
+				</view>
+
+				<!-- 标题上面那个 -->
+				<view class="upTitle">
+					<!-- 帖子id -->
+					<view class="upTitle_id">
+						<text style="font-weight: bold;">帖子ID: </text>{{ item.tipId }}
+					</view>
+					<view class="upTitle_tag">
+						<text style="font-weight: bold;"></text>{{ item.tag }}
+					</view>
+					<!-- 时间 -->
+					<view class="lastTime">
+						<text style="font-weight: bold;">更新时间: </text>{{ item.upDateTime }}
+					</view>
+				</view>
+
+				<!-- //点赞区域
+				<view class="dianZan">
+					<image class="like_love" src="../../static/chatArea/love.png" mode="scaleToFill"></image>
+					//点赞数量计数
+					<view class="like_number">
+						{{ item.love }}
+					</view>
+					//评论数量计数
+					<view class="reply_number">
+						{{ item.replyCount }}
+					</view>
+					//帖子最近更新时间
+					<view class="like_upTime"></view>
+				</view> -->
 			</view>
 		</view>
 
@@ -70,27 +68,27 @@
 
 <script>
 	import calculateWeek from "../../utils/calculateWeek.js"
-	
+
 	export default {
 		data() {
 			return {
 				//聊天区集合
-				chatAreaList:[],
+				chatAreaList: [],
 				//分页数
-				startPage:0,
+				startPage: 0,
 				//openid
-				openid:"",
-				photoServerUrl:"http://124.220.207.245:8080/images/"//图片服务器
-				
+				openid: "",
+				photoServerUrl: "http://124.220.207.245:8080/images/" //图片服务器
+
 			}
 		},
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad: function(options) {
-			var that=this;
+			var that = this;
 			//获取localStorage的openid
-			that.openid=uni.getStorageSync("openid");
+			that.openid = uni.getStorageSync("openid");
 			//首先获取分页帖子
 			that.getTipsByPage()
 		},
@@ -113,15 +111,14 @@
 		/**
 		 * 页面相关事件处理函数--监听用户下拉动作
 		 */
-		onPullDownRefresh: function() {
-		},
+		onPullDownRefresh: function() {},
 		/**
 		 * 页面上拉触底事件的处理函数
 		 */
 		onReachBottom: function() {
-			var that=this;
+			var that = this;
 			console.log("用户触底")
-			that.startPage+=10;
+			that.startPage += 10;
 			//拼接帖子
 			that.getTipsByPage()
 		},
@@ -131,24 +128,24 @@
 		onShareAppMessage: function() {},
 		// 下拉刷新事件
 		onPullDownRefresh(e) {
-			var that=this;
+			var that = this;
 			console.log("用户下拉论坛刷新")
 			uni.redirectTo({
-				url:"/pages/luntan/luntan"
+				url: "/pages/luntan/luntan"
 			})
 		},
 		methods: {
 			//跳转去详细帖子
-			jumpToTip(item){
+			jumpToTip(item) {
 				//直接把详细铁存到localStorage
-				uni.setStorageSync("tipDetail",item)
+				uni.setStorageSync("tipDetail", item)
 				uni.navigateTo({
-					url:"/pages/Tips/Tips"
+					url: "/pages/Tips/Tips"
 				})
 			},
 			//分页获取聊天帖子集合
-			getTipsByPage(e){
-				var that=this
+			getTipsByPage(e) {
+				var that = this
 				uni.request({
 					url: "https://172.20.129.4:8088/chatArea/wechat/getTipsByPage",
 					header: {
@@ -157,30 +154,35 @@
 					method: 'POST',
 					data: {
 						"openid": that.openid,
-						"startPage":that.startPage
+						"startPage": that.startPage
 					},
 					success: (res) => {
 						console.log(res)
-						if(res.data.a){
-						// that.chatAreaList=res.data.data
-						//成功后需要把data的tag数据进行转换一下
-						for(let i=0;i<res.data.data.length;i++){
-							if(res.data.data[i].tag==0)res.data.data[i].tag="聊天灌水"
-							if(res.data.data[i].tag==1)res.data.data[i].tag="寻物/失物"
-							if(res.data.data[i].tag==2)res.data.data[i].tag="跳蚤市场"
-							if(res.data.data[i].tag==3)res.data.data[i].tag="bug反馈"
-							
-							//转换他的更新时间
-							let currentTime = new Date().getTime();
-							if((currentTime-res.data.data[i].upDateTime)/1000<600)res.data.data[i].upDateTime="十分钟内"
-							if((currentTime-res.data.data[i].upDateTime)/1000<1800)res.data.data[i].upDateTime="三十分钟内"
-							if((currentTime-res.data.data[i].upDateTime)/1000<3600)res.data.data[i].upDateTime="一小时内"
-							if((currentTime-res.data.data[i].upDateTime)/1000<86400)res.data.data[i].upDateTime="一天之内"
-							// 如果比一天还多 这条可以将时间戳转换成日期格式
-							if((currentTime-res.data.data[i].upDateTime)/1000>86400)res.data.data[i].upDateTime=calculateWeek.formatTime(res.data.data[i].upDateTime); 
-							  
-						}
-						Array.prototype.push.apply(that.chatAreaList, res.data.data);
+						if (res.data.a) {
+							// that.chatAreaList=res.data.data
+							//成功后需要把data的tag数据进行转换一下
+							for (let i = 0; i < res.data.data.length; i++) {
+								if (res.data.data[i].tag == 0) res.data.data[i].tag = "聊天灌水"
+								if (res.data.data[i].tag == 1) res.data.data[i].tag = "寻物/失物"
+								if (res.data.data[i].tag == 2) res.data.data[i].tag = "跳蚤市场"
+								if (res.data.data[i].tag == 3) res.data.data[i].tag = "bug反馈"
+
+								//转换他的更新时间
+								let currentTime = new Date().getTime();
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 600) res.data.data[i]
+									.upDateTime = "十分钟内"
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 1800) res.data.data[i]
+									.upDateTime = "三十分钟内"
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 3600) res.data.data[i]
+									.upDateTime = "一小时内"
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 86400) res.data.data[
+									i].upDateTime = "一天之内"
+								// 如果比一天还多 这条可以将时间戳转换成日期格式
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 > 86400) res.data.data[
+									i].upDateTime = calculateWeek.formatTime(res.data.data[i].upDateTime);
+
+							}
+							Array.prototype.push.apply(that.chatAreaList, res.data.data);
 						}
 					}
 				})
@@ -197,14 +199,14 @@
 		z-index: 0;
 		background-color: #f5f5f5;
 	}
-	
+
 	/* 图片展示 */
 	.tieZiBaBa .photo {
 		margin-top: 5px;
 	}
-	
+
 	/* 帖子中每张图片的大小 */
-	.tipImage{
+	.tipImage {
 		width: 50%;
 	}
 
@@ -253,8 +255,9 @@
 		width: 50%;
 
 	}
+
 	/* tag */
-	.tieZiBaBa .upTitle .upTitle_tag{
+	.tieZiBaBa .upTitle .upTitle_tag {
 
 		font-size: 25rpx;
 		color: #a9a9a9;
@@ -284,18 +287,18 @@
 		font-size: large;
 		margin-top: 10rpx;
 		padding-right: 15rpx;
-		
+
 		/* 展示一部分 */
 		/* 数据展示 */
-		overflow:hidden;
-		
-		text-overflow:ellipsis;
-		
-		display:-webkit-box;
-		
-		-webkit-line-clamp:2;
-		
-		-webkit-box-orient:vertical;
+		overflow: hidden;
+
+		text-overflow: ellipsis;
+
+		display: -webkit-box;
+
+		-webkit-line-clamp: 2;
+
+		-webkit-box-orient: vertical;
 	}
 
 	.tieZiBaBa .content {
@@ -304,29 +307,24 @@
 		border-radius: 10rpx;
 		height: auto;
 		/* margin: 10rpx 15rpx 30rpx 15rpx; */
-		
+
 		/* 控制内容展示多少行 */
-		overflow:hidden;
-		
-		text-overflow:ellipsis;
-		
-		display:-webkit-box;
-		
-		-webkit-line-clamp:4;
-		
-		-webkit-box-orient:vertical;
+		overflow: hidden;
+
+		text-overflow: ellipsis;
+
+		display: -webkit-box;
+
+		-webkit-line-clamp: 4;
+
+		-webkit-box-orient: vertical;
 	}
-
-
-
 
 	/* 点赞 */
 	.dianZan {
 		width: 95%;
-		height: 70rpx;
-		/* background-color: white; */
 		border-radius: 10rpx;
-		line-height: 70rpx;
+		line-height: 45rpx;
 		display: flex;
 		position: relative;
 		left: 20rpx;
@@ -334,36 +332,32 @@
 
 	/* 进入评论区旁边那个计数 */
 	.dianZan .reply_number {
+		margin-left: 10%;
 		width: 20%;
-		font-size: 25rpx;
+		font-size: 30rpx;
 	}
 
 	/* 小爱心旁边那个计数 */
-	.dianZan .like .like_number {
+	.dianZan .like_number {
+		margin-left: 1%;
 		width: 20%;
-		font-size: 25rpx;
+		font-size: 30rpx;
 	}
 
 	/* 小爱心 */
-	.dianZan .reply,
-	.like {
-		width: 18.5%;
+	.dianZan .like_love {
+		width: 45rpx;
+		height: 45rpx;
 		text-align: center;
-		display: flex;
-		/* padding-left: 80rpx; */
-	}
-
-	.dianZan .like van-icon:hover {
-		color: red;
 	}
 
 	/* 帖子最近更新时间 */
 	.dianZan .like_upTime {
+		margin-left: 10%;
 		width: 20%;
 		position: relative;
 		font-size: 28rpx;
 		color: #a9a9a9;
-		left: 305rpx;
 	}
 
 	/* 发布按钮 */
