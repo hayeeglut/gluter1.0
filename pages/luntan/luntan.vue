@@ -7,6 +7,18 @@
 		<!-- 帖子区域 -->
 		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId" @click="jumpToTip(item)">
 			<view class="zongTieZi">
+				<!-- 标题上面那个 -->
+				<view class="upTitle">
+					<!-- 帖子id -->
+					<view class="upTitle_id">
+						<text style="font-weight: bold;">帖子ID: </text>{{ item.tipId }}
+					</view>
+					
+					<!-- 时间 -->
+					<view class="lastTime">
+						<text style="font-weight: bold;">更新时间: </text>{{ item.upDateTime }}
+					</view>
+				</view>
 
 				<!-- 标题 -->
 				<view class="title">
@@ -23,35 +35,29 @@
 						:key="index1" :src="this.photoServerUrl+Tieimage"></image>
 				</view>
 
-				<!-- 标题上面那个 -->
-				<view class="upTitle">
-					<!-- 帖子id -->
-					<view class="upTitle_id">
-						<text style="font-weight: bold;">帖子ID: </text>{{ item.tipId }}
-					</view>
-					<view class="upTitle_tag">
+				<!-- 点赞区域 -->
+				<view class="dianZan">
+					<!-- 点赞图片 -->
+					<!-- <image class="like_love" src="../../static/chatArea/love.png" mode="scaleToFill"></image> -->
+					
+					<!-- 点赞数量计数 -->
+					<!-- <view class="like_number">
+						{{ item.love }}
+					</view> -->
+					
+					<!-- 帖子tag -->
+					<view class="commonTag">
 						<text style="font-weight: bold;"></text>{{ item.tag }}
 					</view>
-					<!-- 时间 -->
-					<view class="lastTime">
-						<text style="font-weight: bold;">更新时间: </text>{{ item.upDateTime }}
-					</view>
-				</view>
-
-				<!-- //点赞区域
-				<view class="dianZan">
-					<image class="like_love" src="../../static/chatArea/love.png" mode="scaleToFill"></image>
-					//点赞数量计数
-					<view class="like_number">
-						{{ item.love }}
-					</view>
-					//评论数量计数
+					
+					<!-- 评论数量计数 -->
 					<view class="reply_number">
 						{{ item.replyCount }}
 					</view>
-					//帖子最近更新时间
+					
+					<!-- 帖子最近更新时间 -->
 					<view class="like_upTime"></view>
-				</view> -->
+				</view>
 			</view>
 		</view>
 
@@ -256,15 +262,6 @@
 
 	}
 
-	/* tag */
-	.tieZiBaBa .upTitle .upTitle_tag {
-
-		font-size: 25rpx;
-		color: #a9a9a9;
-		position: relative;
-		width: 30%;
-	}
-
 	/* 帖子id */
 	.tieZiBaBa .upTitle .upTitle_id {
 
@@ -324,12 +321,33 @@
 	.dianZan {
 		width: 95%;
 		border-radius: 10rpx;
-		line-height: 45rpx;
+		line-height: 50rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 20rpx;
+		padding-right: 20rpx;
 		display: flex;
 		position: relative;
-		left: 20rpx;
 	}
-
+	
+	/* 主要tag */
+	.dianZan .mainTag{
+		width: 25%;
+		text-align: center;
+		background-color: lightgreen;
+		border-radius: 15% / 50%;
+		font-size: 30rpx;
+	}
+	
+	/* 次要tag */
+	.dianZan .commonTag{
+		width: 25%;
+		text-align: center;
+		background-color: lightgrey;
+		border-radius: 15% / 50%;
+		font-size: 30rpx;
+	}
+	
 	/* 进入评论区旁边那个计数 */
 	.dianZan .reply_number {
 		margin-left: 10%;
