@@ -41,6 +41,7 @@
 			return {
 				// 默认输入框获得焦点
 				inputFocus: true,
+				nputTitleFocus:true,
 				form: {
 					content: '',
 					address: '',
@@ -134,9 +135,14 @@
 					}
 				});
 			},
-
+			//标题内容
+				
+			inputTitle(event){
+				this.inputTitle=event.detail.cursor
+				this.inputTitleFocus=false;
+			}
 			// 文字内容
-			inputBlur(event) {
+			inputContent(event) {
 				this.inputCursor = event.detail.cursor;
 				this.inputFocus = false;
 			},
