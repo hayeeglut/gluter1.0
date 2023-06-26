@@ -2,46 +2,44 @@
 	<view>
 		<!-- 头顶通知公告栏 -->
 		<view>
-			<uni-notice-bar @click="notice()" background-color="#ecf9ff" single="true" color="#2979FF" showGetMore="true"
-				showIcon="true" text="通知公告栏！通知公告栏！通知公告栏！"></uni-notice-bar>
+			<uni-notice-bar @click="notice()" background-color="#ecf9ff" single="true" color="#2979FF"
+				showGetMore="true" showIcon="true" text="通知公告栏！通知公告栏！通知公告栏！"></uni-notice-bar>
 		</view>
-		
+
 		<view>
 			<text class="Time_info" v-if="hours > 6 && hours < 11">早上好，</text>
 			<text class="Time_info" v-else-if="hours > 11 && hours < 13">中午好，</text>
 			<text class="Time_info" v-else-if="hours > 13 && hours < 18">下午好，</text>
 			<text class="Time_info" v-else>晚上好，</text>
 		</view>
-		
+
 		<view>
 			<text class="Time_smallinfo" v-if="hours > 6 && hours < 11">一缕阳光穿过你的窗户，温暖地照在你的脸上，提醒你一天的开始。</text>
 			<text class="Time_smallinfo" v-else-if="hours > 11 && hours < 13">享受美食的同时，也要坚持健康的饮食。</text>
 			<text class="Time_smallinfo" v-else-if="hours > 13 && hours < 18">时光过得有些缓慢，但是不要放弃你的目标。</text>
 			<text class="Time_smallinfo" v-else>现在是回家休息的时间，放松一下自己吧。</text>
 		</view>
-		
+
 		<view class="personInfo">
-			
+
 			<view class="userInfo">
 				<image class="image-bg" src="../../static/images/user/userinfobackground.jpg" mode="center"></image>
 				<view>
 					<image class="avatar" src="../../static/images/user/zhutou.jpg" mode="scaleToFill"></image>
 				</view>
-				<view class="username"></view>
 				<view class="username">用户名:{{forumUsername}}</view>
-				<view class="colleage">1111</view>
-				<view class="classname">1111</view>
 			</view>
-			
-			<scroll-view class="navScroll" scroll-x="true" enable-flex="true">
+
+			<view class="navMenu">
 				<view class="navItem" v-for="(item,index) in serviceBarArray" :key="index">
-					<view class="'navContent':'active'"
-						@click="changeNav" :data-page="index">
+					<view :class="'navContent ' + (active == index ? 'ac' : '')" @click="changeNav(index)">
 						{{ item }}
 					</view>
 				</view>
-			</scroll-view>
-			
+			</view>
+
+
+
 			<view @click="jump" class="keBiaoSimpleShow">
 				<view class="simple_info">
 					<text>今日课表</text>
@@ -59,7 +57,7 @@
 					</view>
 				</scroll-view>
 			</view>
-			
+
 			<!-- 个人小工具 -->
 			<view style="display: flex">
 				<!-- 小按钮 -->
@@ -73,7 +71,7 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- 弹出层-填写账号密码 -->
 		<uni-popup ref="userinfo" type="top" style="height: 80%;" background-color="#ecf9ff">
 			<!-- 切换学号弹出层弹出层 -->
@@ -93,7 +91,7 @@
 				<button type="default" @click="cunChuZHMM()">点击确认</button>
 			</view>
 		</uni-popup>
-		
+
 		<!-- 通知公告弹出窗口 -->
 		<uni-popup ref="notice" type="dialog">
 			<uni-popup-dialog :type="msgType" cancelText="关闭" title="通知" @close="dialogClose" @confirm="dialogConfirm">
@@ -127,6 +125,7 @@
 				keInfoList: [],
 				month: 0,
 				hours: 0,
+				active: 0,
 				serviceBarArray: [
 					'常用服务',
 					'账号设置'
@@ -231,6 +230,23 @@
 										//说明这名用户存在
 										//可以进行课表请求
 										that.getKeBiao();
+										uni.request({
+											url: "https://172.20.129.4:8088/userInfo/wechat/getUserName",
+											header: {
+												'content-type': 'application/x-www-form-urlencoded'
+											},
+											method: 'POST',
+											data: {
+												"openid": that.openid
+											},
+											success: (res) => {
+												uni.setStorageSync(
+													'forumUsername',
+													res.data.data);
+												that.forumUsername =
+													res.data.data;
+											}
+										})
 									} else if (res.data.a == false) {
 										//说明后端不存在这个用户
 										that.popup();
@@ -269,6 +285,13 @@
 			},
 			dialogClose() {
 				console.log('点击关闭')
+			},
+			/**
+			 * 更改导航菜单
+			 */
+			changeNav(index) {
+				this.active = index;
+
 			},
 			/**
 			 * 打开更新个人信息的弹窗
@@ -451,12 +474,21 @@
 </script>
 
 <style>
-	.Time_info{
+	.ac{
+		border-bottom: 1px solid red;
+		color: red;
+		/* border-bottom: 1px solid #ffac05;
+		color: #ffac05; */
+	}
+
+	.Time_info {
 		font-size: 45rpx;
 	}
-	.Time_smallinfo{
+
+	.Time_smallinfo {
 		font-size: 25rpx;
 	}
+
 	/* 个人信息栏 */
 	.personInfo {
 		width: 100%;
@@ -467,18 +499,20 @@
 	/* userInfo */
 	.personInfo .userInfo {
 		width: 100%;
-		height: 400rpx;
+		height: 500rpx;
 		margin-top: 20rpx;
 		color: white;
 	}
+
 	/* 背景图片 */
-	.personInfo .userInfo .image-bg{
-		border-top-left-radius: 5%;
-		border-top-right-radius: 5%;
+	.personInfo .userInfo .image-bg {
+		border-top-left-radius: 4%;
+		border-top-right-radius: 4%;
 		position: absolute;
 		z-index: -1;
 		width: 100%;
 	}
+
 	/* 个人中心 */
 	.personInfo .userInfo .avatar {
 		width: 120rpx;
@@ -487,36 +521,31 @@
 		margin: 40rpx 0 0 320rpx;
 		text-align: center;
 	}
+
 	.personInfo .userInfo .username {
 		line-height: 50rpx;
 		font-size: 30rpx;
 		text-align: center;
 	}
-	.personInfo .userInfo .colleage {
-		line-height: 50rpx;
-		font-weight: 600;
-		font-size: 35rpx;
-		text-align: center;
-	}
-	.personInfo .userInfo .classname {
-		line-height: 50rpx;
-		font-size: 25rpx;
-		text-align: center;
-	}
+
 	/* 切换栏 */
-	.navScroll {
-	    display: flex;
-	    white-space: nowrap;
-	    height: 75rpx;
-	    font-size: 25rpx;
+	.navMenu {
+		display: flex;
+		white-space: nowrap;
+		height: 80rpx;
+		font-size: 35rpx;
+	}
+
+	.navItem {
+		width: 40%;
+		text-align: center;
+		margin: 20rpx 12rpx 0rpx;
+		padding: 5rpx 25rpx;
+		line-height: 38rpx;
 	}
 	
-	.navScroll .navItem {
-	    margin: 20rpx 12rpx 0rpx;
-	}
-	
-	.navScroll .navItem .navContent {
-	    padding: 5rpx 25rpx;
+	.navItem .navContent {
+	    padding: 5rpx 20rpx;
 	    line-height: 38rpx;
 	}
 
@@ -536,9 +565,8 @@
 
 	/* 简化课表 */
 	.keBiaoSimpleShow {
-		background-color: #7b7599;
+		background-color: aliceblue;
 		height: 300rpx;
-		border-radius: 5% / 15%;
 	}
 
 
