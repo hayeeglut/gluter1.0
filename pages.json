@@ -49,31 +49,20 @@
 		}
 
 	}, {
-		"path": "pages/shezhi/shezhi",
+		"path": "pages/Tips/Tips",
 		"style": {
-			"navigationBarTitleText": "设置",
-			"enablePullDownRefresh": false
+			"navigationBarTitleText": "帖子详情",
+			"enablePullDownRefresh": true
 		}
 
-	}    ,{
-            "path" : "pages/Tips/Tips",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "帖子详情",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/Fabu/Fabu",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "发布帖子",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-    ],
+	}, {
+		"path": "pages/Fabu/Fabu",
+		"style": {
+			"navigationBarTitleText": "发布帖子",
+			"enablePullDownRefresh": true
+		}
+
+	}],
 	"tabBar": {
 		"color": "#7A7E83",
 		"selectedColor": "#3cc51f",
@@ -107,6 +96,6 @@
 		"app-plus": {
 			"background": "#efeff4"
 		},
-		 "lazyCodeLoading": "requiredComponents"
+		"lazyCodeLoading": "requiredComponents"
 	}
 }

@@ -37,10 +37,9 @@
 					</view>
 				</view>
 			</view>
-
-
-
-			<view @click="jump" class="keBiaoSimpleShow">
+			
+			<!-- 条件渲染 要么今日课表 要么账号设置 -->
+			<view @click="jump" class="keBiaoSimpleShow" v-if="showTool">
 				<view class="simple_info">
 					<text>今日课表</text>
 				</view>
@@ -57,9 +56,25 @@
 					</view>
 				</scroll-view>
 			</view>
+			
+			<view class="xuanXiang" v-if="!showTool">
+				<view @click="xiuGaiXueHaoMiMa" class="zhuXiao">
+					<text class="alltext">注销用户，重新登陆</text>
+					<image src="../../static/images/shezhi/xiaolian.png"></image>
+				</view>
+				<!-- 反馈 -->
+				<view @click="fanKuiKuang" class="fankui">
+					<text class="alltext">给开发者反馈</text>
+					<image src="../../static/images/shezhi/fanzhuanxiaolian.png"></image>
+				</view>
+				<view @click="gengXinKeBiao" class="gengxin">
+					<text class="alltext">更新课表</text>
+					<image src="../../static/images/shezhi/zhangzuixiao.png"></image>
+				</view>
+			</view>
 
 			<!-- 个人小工具 -->
-			<view style="display: flex">
+			<view style="display: flex;margin-top: 10rpx;">
 				<!-- 小按钮 -->
 				<view class="anNiu">
 					<view v-for="item,key in tuBiao" :key="key" class="chengJi">
@@ -91,6 +106,15 @@
 				<button type="default" @click="cunChuZHMM()">点击确认</button>
 			</view>
 		</uni-popup>
+		
+		<!-- 弹出层-填写反馈内容 -->
+		<uni-popup ref="fanKui" type="bottom" @close="onClose">
+			<view class="tanchuceng">
+				<textarea @input="fanKuiNeiRongFun" class="shuRuKuang" placeholder="也可以联系开发者QQ哦:2695743645"
+					auto-height></textarea>
+				<button class="fanKuiAnNiu" color="#00aaff" @click="fanKui">点击反馈</button>
+			</view>
+		</uni-popup>
 
 		<!-- 通知公告弹出窗口 -->
 		<uni-popup ref="notice" type="dialog">
@@ -114,34 +138,40 @@
 	export default {
 		data() {
 			return {
+				// 绑定学号密码以及登陆方式
 				j_username: "",
 				j_password: "",
+				login_type: 'unit',
+				// 论坛用户名
 				forumUsername: "请登录",
+				// 课表信息
 				weeklyData: [{}],
 				openid: "",
+				// 日期
 				todayDay: 0,
 				todayMonth: 0,
 				day: 0,
-				keInfoList: [],
 				month: 0,
 				hours: 0,
-				active: 0,
+				// 详细课程
+				keInfoList: [],
+				// 今日课表 以及课的颜色
+				colorArrays: [''],
+				today_keBiao: [],
+				// 导航
 				serviceBarArray: [
 					'常用服务',
 					'账号设置'
 				],
-				openBoolen: false,
+				// 导航按钮活跃状态 第几页活跃
+				active: 0,
+				// 反馈内容
+				fanKuiNeiRong: '',
 				// 弹出层
-				show: false,
-				show_tongZhi: false,
-				login_type: 'unit',
+				showTool: true,
 				showPassword: true,
-				//本学期开学日
-				schoolTime: ['2022', '08', '29'],
 				//通知公告
 				tongZhiGongGao: [''],
-				colorArrays: [''],
-				today_keBiao: [],
 				JESSIONID: '',
 				//图标信息
 				tuBiao: [{
@@ -161,10 +191,11 @@
 						"name": "成绩订阅通知",
 						"navigateUrl": "../cjdytongzhi/cjdytongzhi"
 					}, {
-						"imgurl": "../../static/images/tool_images/shezhi.png",
-						"name": "设置",
-						"navigateUrl": "../shezhi/shezhi"
-					}, {
+						"imgurl": "../../static/images/tool_images/shigongzhong.png",
+						"name": "施工中...",
+						"navigateUrl": ""
+					},
+					{
 						"imgurl": "../../static/images/tool_images/shigongzhong.png",
 						"name": "施工中...",
 						"navigateUrl": ""
@@ -291,7 +322,7 @@
 			 */
 			changeNav(index) {
 				this.active = index;
-
+				this.showTool = !this.showTool;
 			},
 			/**
 			 * 打开更新个人信息的弹窗
@@ -469,11 +500,176 @@
 				this.today_keBiao = a;
 			},
 		},
-
+		
+		// 改绑学号
+		xiuGaiXueHaoMiMa(res) {
+			var that = this;
+			uni.request({
+				// url: 'https://localhost:8088/userInfo/wechat/deleteUser',
+				url: 'https://172.20.129.4:8088/userInfo/wechat/deleteUser',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				data: {
+					openid: that.openid
+				},
+				success: (res) => {
+					console.log(res, '改学号');
+					//确认成功后
+					if (res.data.a = true) {
+						//跳转回user页面
+						uni.reLaunch({
+							url: '/pages/user/user'
+						});
+					}
+				}
+			});
+		},
+		
+		// 实时获取反馈内容
+		fanKuiNeiRongFun(res) {
+			this.fanKuiNeiRong = res.detail.value;
+		},
+		
+		// 点击开发者反馈弹出上拉框
+		fanKuiKuang(res) {
+			this.$refs.fanKui.open();
+		},
+		
+		// 反馈按钮
+		fanKui(result) {
+			var that = this;
+			if (that.fanKuiNeiRong != null) {
+				uni.showToast({
+					title: '反馈提交中……'
+				});
+				uni.request({
+					//  url: 'https://localhost:8088/jianYi/set1',
+					url: 'https://172.20.129.4:8088/jianYi/set1',
+					method: 'POST',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						message: that.fanKuiNeiRong
+					},
+					success: (res) => {
+						//关闭上拉框
+						that.$refs.fanKui.close();
+						uni.hideToast({});
+					}
+				});
+			}
+		},
+		
+		//更新课表，直接去后台把它旧课表给删了就好了
+		gengXinKeBiao(res) {
+			uni.setStorageSync('weeklyData', 'needReNew');
+			//后台请求删除课表
+			uni.request({
+				// url: 'https://localhost:8088/keBiao/wechat/reNewKeBiao',
+				url: 'https://172.20.129.4:8088/keBiao/wechat/reNewKeBiao',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				data: {
+					openid: this.openid
+				},
+				success: (res) => {
+					uni.reLaunch({
+						url: '/pages/user/user'
+					});
+				}
+			});
+		
+		
+		},
+		onClose() {
+			console.log('占位：函数 onClose 未声明');
+		}
 	}
 </script>
 
 <style>
+	/* 修改学号密码 */
+	.xuanXiang {
+		padding-top: 30rpx;
+		width: 90%;
+		background-color: white;
+		border-radius: 30rpx;
+		height: 300rpx;
+		margin: 0 auto;
+	}
+	
+	.alltext {
+		margin-left: 30rpx;
+		margin-top: 70rpx;
+	}
+	
+	.xuanXiang image {
+		margin-top: 10rpx;
+		width: 40rpx;
+		height: 40rpx;
+		float: right;
+		padding-right: 50rpx;
+	}
+	
+	.zhuXiao{
+		margin-left: 40rpx;
+		width: 80%;
+		height: 80rpx;
+		background-color: bisque;
+		border-radius: 10rpx;
+		align-items: center;
+		vertical-align: center;
+		justify-content: center;
+	}
+	.fankui{
+		margin-top: 10rpx;
+		margin-left: 40rpx;
+		width: 80%;
+		height: 80rpx;
+		background-color: bisque;
+		border-radius: 10rpx;
+		align-items: center;
+		vertical-align: center;
+		justify-content: center;
+	}
+	.gengxin{
+		margin-top: 10rpx;
+		margin-left: 40rpx;
+		width: 80%;
+		height: 80rpx;
+		background-color: bisque;
+		border-radius: 10rpx;
+		align-items: center;
+		vertical-align: center;
+		justify-content: center;
+	}
+	
+	/* 给我反馈 */
+	.tanchuceng {
+		background-color: darkseagreen;
+		border-radius: 8px;
+		height: 50%;
+		width: 100%;
+	}
+	
+	.shuRuKuang {
+		background-color: aliceblue;
+		border: 1px solid #00000059;
+		margin: 10px auto;
+		width: 90%;
+		border-radius: 8px;
+	}
+	
+	.fanKuiAnNiu {
+		display: flex;
+		margin: 0 auto;
+	}
+	
 	.ac{
 		border-bottom: 1px solid red;
 		color: red;
@@ -565,35 +761,31 @@
 
 	/* 简化课表 */
 	.keBiaoSimpleShow {
-		background-color: aliceblue;
+		margin: 0 auto;
+		width: 90%;
+		border-radius: 30rpx;
+		background-color: white;
 		height: 300rpx;
 	}
 
 
 	.keBiaoSimpleShow scroll-view {
-		height: 85%;
+		height: 75%;
 	}
 
 	/* 今日课表 */
 	.keBiaoSimpleShow .simple_info {
-		margin: 5rpx 5rpx 5rpx 5rpx;
-		color: white;
-		width: 100%;
+		color: #f54933;
 		text-align: center;
 	}
 
-	.keBiaoSimpleShow .simple_info text {
-		margin-left: 32rpx;
-	}
-
 	.keBiaoSimpleShow .ke_info {
-		border-radius: 10rpx;
-		padding-left: 10rpx;
-		margin: 10rpx auto;
-		width: 90%;
+		text-align: center;
+		border-radius: 20rpx;
+		margin: 15rpx auto;
+		width: 85%;
 		height: auto;
 		background-color: rgba(0, 0, 0, 0.432);
-		/* border-radius:10px */
 	}
 
 	.keBiaoSimpleShow van-row {
@@ -601,7 +793,6 @@
 	}
 
 	.keBiaoSimpleShow van-col {
-		padding: 5rpx 5rpx 5rpx 5rpx;
 		color: white;
 	}
 
