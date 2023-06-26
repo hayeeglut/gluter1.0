@@ -179,14 +179,16 @@
 								if (res.data.data[i].tag == 2) res.data.data[i].tag = "跳蚤市场"
 								if (res.data.data[i].tag == 3) res.data.data[i].tag = "bug反馈"
 
-								//转换他的更新时间
-								let currentTime = new Date().getTime();
+								//转换他的更新时间1687755158000 1687706306351000
+								let currentTime = new Date();
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 600) res.data.data[i]
 									.upDateTime = "十分钟内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 1800) res.data.data[i]
 									.upDateTime = "三十分钟内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 3600) res.data.data[i]
 									.upDateTime = "一小时内"
+									if ((currentTime - res.data.data[i].upDateTime) / 1000 < 43200) res.data.data[i]
+										.upDateTime = "半天之内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 86400) res.data.data[
 									i].upDateTime = "一天之内"
 								// 如果比一天还多 这条可以将时间戳转换成日期格式

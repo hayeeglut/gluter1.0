@@ -28,7 +28,7 @@
 		<!-- 选择板块 -->
 
 		<!-- 底部确定按钮 -->
-		<view @click="clickCreate" class="yue-base-button">
+		<view @click="clickCreate()" class="yue-base-button">
 			<view>确定发布~</view>
 		</view>
 	</view>
@@ -48,7 +48,8 @@
 					imageFileList: [],
 					tag:0
 				},
-				items: ["聊天灌水", "寻物启事/失物招领", "跳蚤市场", "bug反馈"]
+				items: ["聊天灌水", "寻物启事/失物招领", "跳蚤市场", "bug反馈"],
+				imageSuccessCount:0
 			}
 		},
 		/**
@@ -61,29 +62,6 @@
 			console.log("openid："+that.openid)
 		},
 		methods: {
-			//图片上传，多张
-			upload_file: function(url,filePath,tipId) {
-				var that = this;
-				wx.uploadFile({
-					url: url,
-					filePath: filePath,
-					name: 'upLoadFile',
-					header: {
-						'content-type': 'multipart/form-data'
-					}, // 设置请求的 header
-					formData: {
-						tipId: tipId
-					}, // HTTP 请求中其他额外的 form data
-					success: function(res) {
-						wx.showToast({
-							title: "图片修改成功",
-							icon: 'success',
-							duration: 700
-						})
-					},
-					fail: function(res) {}
-				})
-			},
 			//测试图片选择
 			imageUpLoad: function(res) {
 				var that = this;
@@ -126,9 +104,32 @@
 					}
 				});
 			},
-
+			//图片上传，多张
+			upload_file: function(url,filePath,tipId) {
+				var that = this;
+				wx.uploadFile({
+					url: url,
+					filePath: filePath,
+					name: 'upLoadFile',
+					header: {
+						'content-type': 'multipart/form-data'
+					}, // 设置请求的 header
+					formData: {
+						tipId: tipId
+					}, // HTTP 请求中其他额外的 form data
+					success: function(res) {
+						that.imageSuccessCount++;
+						console.log("上传成功＋1")
+					},
+					fail: function(res) {}
+				})
+			},
 			// 发布
-			clickCreate() {
+			 clickCreate() {
+				//加载动画
+				uni.showLoading({
+					title:"上传中..."
+				})
 				var that=this;
 				console.log(that.form)
 				/**
@@ -150,6 +151,7 @@
 				 }
 				 //内容齐全
 				 else{
+					 console.log("资料齐全，开始上传")
 					 //首先进行title content推送
 					 var that=this;
 					 uni.request({
@@ -163,15 +165,47 @@
 							title:that.form.title,
 							context:that.form.content,
 							tag:that.form.tag,
-							upLoadTime:new Date().valueOf()*1000
+							upLoadTime:new Date().valueOf()
 					 	},
 					 	success: (res) => {
 					 		if(res.data.a){
 					 			console.log(res.data.data)
+								//此时res.data.data就是返回的后端关于这条主键id
+								//对图片进行逐张上传
+								for(let i=0;i<that.form.imageFileList.length;i++){
+									that.upload_file("https://172.20.129.4:8088/chatArea/wechat/upLoadImage",that.form.imageFileList[i].tempFilePath,res.data.data)
+								}
+								/**
+								 * 粗暴办法，每500ms检查一次是否上传完毕，上传完毕就退出，不然永远不退出
+								 * */
+								var interval = setInterval(function(){
+									console.log(that.imageSuccessCount)
+									console.log(that.form.imageFileList.length)
+									if(that.imageSuccessCount==that.form.imageFileList.length)
+									that.checkUpSuccess()
+									//首先去结束定时器
+									clearInterval(interval)
+								},500)
 					 		}
 					 	}
 					 })
 				 }
+			},
+			//判断上传是否成功，并执行动作
+			checkUpSuccess(){
+				var that=this;
+					//说明所有图片上传成功
+					//关闭加载动画
+					uni.hideLoading();
+					//展示toast表示上传成功
+					uni.showToast({
+						title:"已上传，待审核",
+						duration:2000
+					})
+				//无论怎么样，结束然后返回论坛主界面
+				setTimeout(function () {
+					uni.navigateBack();
+				}, 2000);
 			},
 		}
 	}
