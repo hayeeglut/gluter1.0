@@ -116,7 +116,7 @@
 						//成功获取openid
 						uni.request({
 							// url: 'https://localhost:8088/grade/wechat/get',
-							url: 'https://172.20.129.4:8088/grade/wechat/get',
+							url: 'https://172.20.149.44:8088/grade/wechat/get',
 							header: {
 								'content-type': 'application/x-www-form-urlencoded'
 							},

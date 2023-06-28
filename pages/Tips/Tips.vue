@@ -29,7 +29,7 @@
 			getTipDetailReply(item){
 				var that=this;
 				uni.request({
-					url: "https://172.20.129.4:8088/chatArea/wechat/getTipContext",
+					url: "https://172.20.149.44:8088/chatArea/wechat/getTipContext",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},

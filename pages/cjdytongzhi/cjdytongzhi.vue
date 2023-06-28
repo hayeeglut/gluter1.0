@@ -50,7 +50,7 @@
 			    var that = this;
 			    uni.request({
 			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/delete_subscrip',
-			        url: 'https://172.20.129.4:8088/exam_query_test/wechat/delete_subscrip',
+			        url: 'https://172.20.149.44:8088/exam_query_test/wechat/delete_subscrip',
 			        header: {
 			            'content-type': 'application/x-www-form-urlencoded'
 			        },
@@ -72,7 +72,7 @@
 			    var that = this;
 			    uni.request({
 			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/sub_status_query',
-			        url: 'https://172.20.129.4:8088/exam_query_test/wechat/sub_status_query',
+			        url: 'https://172.20.149.44:8088/exam_query_test/wechat/sub_status_query',
 			        header: {
 			            'content-type': 'application/x-www-form-urlencoded'
 			        },
@@ -120,7 +120,7 @@
 			            //订阅确认完了再向后端发送请求
 			            uni.request({
 			                // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/subscrip_confirm',
-			                url: 'https://172.20.129.4:8088/exam_query_test/wechat/subscrip_confirm',
+			                url: 'https://172.20.149.44:8088/exam_query_test/wechat/subscrip_confirm',
 			                header: {
 			                    'content-type': 'application/x-www-form-urlencoded'
 			                },

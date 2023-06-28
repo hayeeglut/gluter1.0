@@ -47,41 +47,46 @@
 				<scroll-view scroll-y="true">
 					<view :style="{'background-color':colorArrays[key]}" v-for="(item,key) in today_keBiao" :key="key"
 						class="ke_info">
-						<uni-row>
-							<uni-col span="20">{{item.keChengMing}}</uni-col>
-							<uni-col span="20">{{item.jiaoShi}}</uni-col>
-							<uni-col span="20">第{{item.shangKeJieShu}},{{item.shangKeJieShu+1}}节</uni-col>
-							<uni-col span="20">{{item.riQi}}</uni-col>
+						<uni-row >
+							<uni-col style="width: 100%;">{{item.keChengMing}}</uni-col>
+							<uni-col style="width: 100%;" >{{item.jiaoShi}}</uni-col>
+							<uni-col style="width: 100%;" >第{{item.shangKeJieShu}}-{{item.shangKeJieShu+1}}节</uni-col>
+							<uni-col style="width: 100%;" >{{item.riQi}}</uni-col>
 						</uni-row>
 					</view>
 				</scroll-view>
 			</view>
 			
 			<view class="xuanXiang" v-if="!showTool">
-				<view @click="xiuGaiXueHaoMiMa" class="zhuXiao">
+				<view class="zhuXiao" @click="xiuGaiXueHaoMiMa()" >
 					<text class="alltext">注销用户，重新登陆</text>
 					<image src="../../static/images/shezhi/xiaolian.png"></image>
 				</view>
 				<!-- 反馈 -->
-				<view @click="fanKuiKuang" class="fankui">
+				<view  class="fankui" @click="fanKuiKuang()">
 					<text class="alltext">给开发者反馈</text>
 					<image src="../../static/images/shezhi/fanzhuanxiaolian.png"></image>
 				</view>
-				<view @click="gengXinKeBiao" class="gengxin">
+				<view @click="gengXinKeBiao()" class="gengxin">
 					<text class="alltext">更新课表</text>
 					<image src="../../static/images/shezhi/zhangzuixiao.png"></image>
 				</view>
 			</view>
+
 
 			<!-- 个人小工具 -->
 			<view style="display: flex;margin-top: 10rpx;">
 				<!-- 小按钮 -->
 				<view class="anNiu">
 					<view v-for="item,key in tuBiao" :key="key" class="chengJi">
-						<navigator :url="item.navigateUrl" hover-class="navigator-hover">
-							<image :src="item.imgurl"></image>
-							<view>{{item.name}}</view>
+					<!-- <uni-row > -->
+						<navigator style="display: flex;" :url="item.navigateUrl" hover-class="navigator-hover">
+							<view style="width: 20%;"><image style="width: 80rpx;height: 80rpx;" :src="item.imgurl"></image></view>
+							<view style="width: 60%; line-height: 80rpx;" span="15" class="name">{{item.name}}</view>
+							<view style="width: 20%;line-height: 80rpx;" span="4">></view>
 						</navigator>
+					<!-- </uni-row> -->
+					
 					</view>
 				</view>
 			</view>
@@ -192,22 +197,12 @@
 						"navigateUrl": "../cjdytongzhi/cjdytongzhi"
 					}, {
 						"imgurl": "../../static/images/tool_images/shigongzhong.png",
-						"name": "施工中...",
+						"name": "体测查询",
 						"navigateUrl": ""
 					},
 					{
 						"imgurl": "../../static/images/tool_images/shigongzhong.png",
-						"name": "施工中...",
-						"navigateUrl": ""
-					},
-					{
-						"imgurl": "../../static/images/tool_images/shigongzhong.png",
-						"name": "施工中...",
-						"navigateUrl": ""
-					},
-					{
-						"imgurl": "../../static/images/tool_images/shigongzhong.png",
-						"name": "施工中...",
+						"name": "还没想好...",
 						"navigateUrl": ""
 					}
 				]
@@ -232,7 +227,7 @@
 					console.log(event, '获取code');
 					//客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
 					uni.request({
-						url: 'https://172.20.129.4:8088/wx_get_true_openid/get',
+						url: 'https://172.20.149.44:8088/wx_get_true_openid/get',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
 						},
@@ -247,7 +242,7 @@
 							console.log('Page Load')
 							//去userinfo表查找是否存在用户
 							uni.request({
-								url: "https://172.20.129.4:8088/userInfo/wechat/find_user",
+								url: "https://172.20.149.44:8088/userInfo/wechat/find_user",
 								header: {
 									'content-type': 'application/x-www-form-urlencoded'
 								},
@@ -262,7 +257,7 @@
 										//可以进行课表请求
 										that.getKeBiao();
 										uni.request({
-											url: "https://172.20.129.4:8088/userInfo/wechat/getUserName",
+											url: "https://172.20.149.44:8088/userInfo/wechat/getUserName",
 											header: {
 												'content-type': 'application/x-www-form-urlencoded'
 											},
@@ -276,15 +271,17 @@
 													res.data.data);
 												that.forumUsername =
 													res.data.data;
+													
 											}
 										})
 									} else if (res.data.a == false) {
 										//说明后端不存在这个用户
 										that.popup();
+										uni.hideLoading()
 									}
 								}
 							})
-							uni.hideLoading();
+							// uni.hideLoading();
 						}
 					})
 				}
@@ -305,6 +302,90 @@
 			this.getSystemTime();
 		},
 		methods: {
+			// 改绑学号
+			xiuGaiXueHaoMiMa(res) {
+				var that = this;
+				uni.request({
+					// url: 'https://localhost:8088/userInfo/wechat/deleteUser',
+					url: 'https://172.20.149.44:8088/userInfo/wechat/deleteUser',
+					method: 'POST',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						openid: that.openid
+					},
+					success: (res) => {
+						console.log(res, '改学号');
+						//确认成功后
+						if (res.data.a = true) {
+							//跳转回user页面
+							uni.reLaunch({
+								url: '/pages/user/user'
+							});
+						}
+					}
+				});
+			},
+			
+			// 实时获取反馈内容
+			fanKuiNeiRongFun(res) {
+				this.fanKuiNeiRong = res.detail.value;
+			},
+			
+			// 点击开发者反馈弹出上拉框
+			fanKuiKuang(res) {
+				this.$refs.fanKui.open();
+			},
+			
+			// 反馈按钮
+			fanKui(result) {
+				var that = this;
+				if (that.fanKuiNeiRong != null) {
+					uni.showToast({
+						title: '反馈提交中……'
+					});
+					uni.request({
+						//  url: 'https://localhost:8088/jianYi/set1',
+						url: 'https://172.20.149.44:8088/jianYi/set1',
+						method: 'POST',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							message: that.fanKuiNeiRong
+						},
+						success: (res) => {
+							//关闭上拉框
+							that.$refs.fanKui.close();
+							uni.hideToast({});
+						}
+					});
+				}
+			},
+			
+			//更新课表，直接去后台把它旧课表给删了就好了
+			gengXinKeBiao(res) {
+				console.log("更新课表")
+				uni.setStorageSync('weeklyData', 'needReNew');
+				//后台请求删除课表
+				uni.request({
+					// url: 'https://localhost:8088/keBiao/wechat/reNewKeBiao',
+					url: 'https://172.20.149.44:8088/keBiao/wechat/reNewKeBiao',
+					method: 'POST',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						openid: this.openid
+					},
+					success: (res) => {
+						uni.reLaunch({
+							url: '/pages/user/user'
+						});
+					}
+				});
+			},
 			//登录方式单选按钮
 			login_type_confirm(e) {
 				// 1 获取单选框中的值
@@ -357,7 +438,7 @@
 			//将获取通知公告请求独立
 			getTongZhi() {
 				uni.request({
-					url: 'https://172.20.129.4:8088/tongZhi/getToolTop',
+					url: 'https://172.20.149.44:8088/tongZhi/getToolTop',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -396,7 +477,7 @@
 				})
 				var that = this;
 				uni.request({
-					url: "https://172.20.129.4:8088/userInfo/wechat/createUser",
+					url: "https://172.20.149.44:8088/userInfo/wechat/createUser",
 					method: "POST",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -429,7 +510,7 @@
 			getKeBiao(res) {
 				var that = this;
 				uni.request({
-					url: "https://172.20.129.4:8088/keBiao/wechat/getKeBiao",
+					url: "https://172.20.149.44:8088/keBiao/wechat/getKeBiao",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -465,7 +546,6 @@
 							uni.setStorageSync('JESSIONID', result.data.jessionid);
 							uni.setStorageSync('weeklyData', JSON.parse(result.data.data));
 							that.getBenRiKeBiao();
-							uni.hideLoading();
 						}
 					},
 				})
@@ -498,94 +578,10 @@
 				}
 				//成功拿到今天的数据,给他存一下
 				this.today_keBiao = a;
+				uni.hideLoading()
 			},
 		},
 		
-		// 改绑学号
-		xiuGaiXueHaoMiMa(res) {
-			var that = this;
-			uni.request({
-				// url: 'https://localhost:8088/userInfo/wechat/deleteUser',
-				url: 'https://172.20.129.4:8088/userInfo/wechat/deleteUser',
-				method: 'POST',
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				data: {
-					openid: that.openid
-				},
-				success: (res) => {
-					console.log(res, '改学号');
-					//确认成功后
-					if (res.data.a = true) {
-						//跳转回user页面
-						uni.reLaunch({
-							url: '/pages/user/user'
-						});
-					}
-				}
-			});
-		},
-		
-		// 实时获取反馈内容
-		fanKuiNeiRongFun(res) {
-			this.fanKuiNeiRong = res.detail.value;
-		},
-		
-		// 点击开发者反馈弹出上拉框
-		fanKuiKuang(res) {
-			this.$refs.fanKui.open();
-		},
-		
-		// 反馈按钮
-		fanKui(result) {
-			var that = this;
-			if (that.fanKuiNeiRong != null) {
-				uni.showToast({
-					title: '反馈提交中……'
-				});
-				uni.request({
-					//  url: 'https://localhost:8088/jianYi/set1',
-					url: 'https://172.20.129.4:8088/jianYi/set1',
-					method: 'POST',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
-					data: {
-						message: that.fanKuiNeiRong
-					},
-					success: (res) => {
-						//关闭上拉框
-						that.$refs.fanKui.close();
-						uni.hideToast({});
-					}
-				});
-			}
-		},
-		
-		//更新课表，直接去后台把它旧课表给删了就好了
-		gengXinKeBiao(res) {
-			uni.setStorageSync('weeklyData', 'needReNew');
-			//后台请求删除课表
-			uni.request({
-				// url: 'https://localhost:8088/keBiao/wechat/reNewKeBiao',
-				url: 'https://172.20.129.4:8088/keBiao/wechat/reNewKeBiao',
-				method: 'POST',
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				data: {
-					openid: this.openid
-				},
-				success: (res) => {
-					uni.reLaunch({
-						url: '/pages/user/user'
-					});
-				}
-			});
-		
-		
-		},
 		onClose() {
 			console.log('占位：函数 onClose 未声明');
 		}
@@ -765,7 +761,7 @@
 		width: 90%;
 		border-radius: 30rpx;
 		background-color: white;
-		height: 300rpx;
+		height: 400rpx;
 	}
 
 
@@ -778,14 +774,19 @@
 		color: #f54933;
 		text-align: center;
 	}
+	/* 每个今日课表框里面的每行 */
 
 	.keBiaoSimpleShow .ke_info {
 		text-align: center;
 		border-radius: 20rpx;
-		margin: 15rpx auto;
-		width: 85%;
-		height: auto;
+		margin: 15rpx 0 0 3%;
+		/* width: 85%; */
+		/* height:auto; */
 		background-color: rgba(0, 0, 0, 0.432);
+		
+		float: left;
+		width: 45%;
+		color: white;
 	}
 
 	.keBiaoSimpleShow van-row {
@@ -800,13 +801,28 @@
 	.anNiu {
 		display: flex;
 		flex-wrap: wrap;
+		margin: 0 auto;
+		width: 90%;
+		border-radius: 30rpx;
+		/* background-color: white; */
+		
 	}
 
 	.anNiu .chengJi {
 		text-align: center;
-		width: 25%;
+		width: 100%;
+		background-color: white;
+		margin-top: 20rpx;
+		border-radius: 25rpx;
+		padding: 15rpx 0 15rpx 0;
+		
+		
 	}
-
+	.anNiu .chengJi .name{
+		font-weight: 800;
+		letter-spacing: 5rpx;
+		
+	}
 	.anNiu .chengJi image {
 		width: 80rpx;
 		height: 80rpx;

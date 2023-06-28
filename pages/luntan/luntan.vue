@@ -44,19 +44,19 @@
 					<!-- <view class="like_number">
 						{{ item.love }}
 					</view> -->
+					<!-- 评论数量计数 -->
+					<view class="reply_number">
+						<!-- 评论图片 -->
+						<image class="like_love" src="../../static/chatArea/list.png" mode="scaleToFill"></image>
+						<text style="float: right;margin: 0 10rpx 0 0;">{{ item.replyCount }}</text>
+					</view>
 					
 					<!-- 帖子tag -->
 					<view class="commonTag">
 						<text style="font-weight: bold;"></text>{{ item.tag }}
 					</view>
-					
-					<!-- 评论数量计数 -->
-					<view class="reply_number">
-						{{ item.replyCount }}
-					</view>
-					
-					<!-- 帖子最近更新时间 -->
-					<view class="like_upTime"></view>
+
+
 				</view>
 			</view>
 		</view>
@@ -159,7 +159,7 @@
 			getTipsByPage(e) {
 				var that = this
 				uni.request({
-					url: "https://172.20.129.4:8088/chatArea/wechat/getTipsByPage",
+					url: "https://172.20.149.44:8088/chatArea/wechat/getTipsByPage",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -174,13 +174,14 @@
 							// that.chatAreaList=res.data.data
 							//成功后需要把data的tag数据进行转换一下
 							for (let i = 0; i < res.data.data.length; i++) {
-								if (res.data.data[i].tag == 0) res.data.data[i].tag = "聊天灌水"
-								if (res.data.data[i].tag == 1) res.data.data[i].tag = "寻物/失物"
-								if (res.data.data[i].tag == 2) res.data.data[i].tag = "跳蚤市场"
-								if (res.data.data[i].tag == 3) res.data.data[i].tag = "bug反馈"
+								if (res.data.data[i].tag == 0) res.data.data[i].tag = "#聊天灌水"
+								if (res.data.data[i].tag == 1) res.data.data[i].tag = "#寻物/失物"
+								if (res.data.data[i].tag == 2) res.data.data[i].tag = "#跳蚤市场"
+								if (res.data.data[i].tag == 3) res.data.data[i].tag = "#bug反馈"
 
 								//转换他的更新时间1687755158000 1687706306351000
-								let currentTime = new Date();
+								let currentTime = new Date().valueOf()
+								// console.log(currentTime)
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 600) res.data.data[i]
 									.upDateTime = "十分钟内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 1800) res.data.data[i]
@@ -351,16 +352,17 @@
 	.dianZan .commonTag{
 		width: 25%;
 		text-align: center;
-		background-color: lightgrey;
-		border-radius: 15% / 50%;
+		background-color: #8fe4ff;
+		border-radius: 2% / 50%;
 		font-size: 30rpx;
 	}
 	
 	/* 进入评论区旁边那个计数 */
 	.dianZan .reply_number {
-		margin-left: 10%;
 		width: 20%;
 		font-size: 30rpx;
+		text-align: center;
+
 	}
 
 	/* 小爱心旁边那个计数 */
@@ -373,7 +375,7 @@
 	/* 小爱心 */
 	.dianZan .like_love {
 		width: 45rpx;
-		height: 45rpx;
+		height: 100%;
 		text-align: center;
 	}
 

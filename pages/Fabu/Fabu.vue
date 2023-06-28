@@ -155,7 +155,7 @@
 					 //首先进行title content推送
 					 var that=this;
 					 uni.request({
-					 	url: "https://172.20.129.4:8088/chatArea/wechat/upLoadChatTip",
+					 	url: "https://172.20.149.44:8088/chatArea/wechat/upLoadChatTip",
 					 	header: {
 					 		'content-type': 'application/x-www-form-urlencoded'
 					 	},
@@ -173,7 +173,7 @@
 								//此时res.data.data就是返回的后端关于这条主键id
 								//对图片进行逐张上传
 								for(let i=0;i<that.form.imageFileList.length;i++){
-									that.upload_file("https://172.20.129.4:8088/chatArea/wechat/upLoadImage",that.form.imageFileList[i].tempFilePath,res.data.data)
+									that.upload_file("https://172.20.149.44:8088/chatArea/wechat/upLoadImage",that.form.imageFileList[i].tempFilePath,res.data.data)
 								}
 								/**
 								 * 粗暴办法，每500ms检查一次是否上传完毕，上传完毕就退出，不然永远不退出
