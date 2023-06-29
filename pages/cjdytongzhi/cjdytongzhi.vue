@@ -2,9 +2,6 @@
 	<view style="height: 100%">
 	    <view>点击订阅后，即可在成绩出来后收到通知</view>
 	    <view>
-	        订阅弹窗出现后，<text style="color: red">不要！</text>勾选“总是保持此订阅！”
-	    </view>
-	    <view>
 	        订阅状态查询:
 	        <text :style="'color: ' + sub_status_color + ';'">{{sub_status}}</text>
 	    </view>
@@ -16,6 +13,12 @@
 	    <view>
 	        <button type="warn" @click="delete_subscrip">取消订阅按钮</button>
 	    </view>
+		<view style="font-size: 50rpx;font-weight: 600;" class="">
+			操作指引
+		</view>
+		<view v-for="(item,tipId) in helpInfo" :key="tipId">
+			{{item}}
+		</view>
 	</view>
 </template>
 
@@ -31,9 +34,30 @@
 		 * 生命周期函数--监听页面加载
 		 */
 		onLoad(options) {
+			var that=this;
 		    this.onLoadClone3389(options);
+			that.getHelpInfo();
 		},
 		methods: {
+			// 获取操作帮助
+			getHelpInfo(){
+			    var that = this;
+			    uni.request({
+			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/delete_subscrip',
+			        url: 'https://172.20.149.44:8088/tongZhi/getCJDY',
+			        header: {
+			            'content-type': 'application/x-www-form-urlencoded'
+			        },
+			        method: 'POST',
+			        success(res) {
+			            if (res.data.a) {
+							console.log(res.data.data)
+							that.helpInfo=res.data.data;
+							console.log(that.helpInfo)
+			            }
+			        }
+			    });
+			},
 			/**
 			 * 生命周期函数--监听页面加载
 			 */

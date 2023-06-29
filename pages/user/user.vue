@@ -27,7 +27,10 @@
 				<view>
 					<image class="avatar" src="../../static/images/user/zhutou.jpg" mode="scaleToFill"></image>
 				</view>
-				<view class="username">用户名:{{forumUsername}}</view>
+				<view class="username">{{forumUsername}}</view>
+				<view @click="fanKuiKuang()" class="changeUserName">
+					修改
+				</view>
 			</view>
 
 			<view class="navMenu">
@@ -37,7 +40,7 @@
 					</view>
 				</view>
 			</view>
-			
+
 			<!-- 条件渲染 要么今日课表 要么账号设置 -->
 			<view @click="jump" class="keBiaoSimpleShow" v-if="showTool">
 				<view class="simple_info">
@@ -47,26 +50,26 @@
 				<scroll-view scroll-y="true">
 					<view :style="{'background-color':colorArrays[key]}" v-for="(item,key) in today_keBiao" :key="key"
 						class="ke_info">
-						<uni-row >
+						<uni-row>
 							<uni-col style="width: 100%;">{{item.keChengMing}}</uni-col>
-							<uni-col style="width: 100%;" >{{item.jiaoShi}}</uni-col>
-							<uni-col style="width: 100%;" >第{{item.shangKeJieShu}}-{{item.shangKeJieShu+1}}节</uni-col>
-							<uni-col style="width: 100%;" >{{item.riQi}}</uni-col>
+							<uni-col style="width: 100%;">{{item.jiaoShi}}</uni-col>
+							<uni-col style="width: 100%;">第{{item.shangKeJieShu}}-{{item.shangKeJieShu+1}}节</uni-col>
+							<uni-col style="width: 100%;">{{item.riQi}}</uni-col>
 						</uni-row>
 					</view>
 				</scroll-view>
 			</view>
-			
+
 			<view class="xuanXiang" v-if="!showTool">
-				<view class="zhuXiao" @click="xiuGaiXueHaoMiMa()" >
-					<text class="alltext">注销用户，重新登陆</text>
+				<view class="zhuXiao" @click="xiuGaiXueHaoMiMa()">
+					<text style="" class="alltext">注销用户，重新登陆</text>
 					<image src="../../static/images/shezhi/xiaolian.png"></image>
 				</view>
 				<!-- 反馈 -->
-				<view  class="fankui" @click="fanKuiKuang()">
+<!-- 				<view class="fankui" @click="fanKuiKuang()">
 					<text class="alltext">给开发者反馈</text>
 					<image src="../../static/images/shezhi/fanzhuanxiaolian.png"></image>
-				</view>
+				</view> -->
 				<view @click="gengXinKeBiao()" class="gengxin">
 					<text class="alltext">更新课表</text>
 					<image src="../../static/images/shezhi/zhangzuixiao.png"></image>
@@ -79,14 +82,16 @@
 				<!-- 小按钮 -->
 				<view class="anNiu">
 					<view v-for="item,key in tuBiao" :key="key" class="chengJi">
-					<!-- <uni-row > -->
+						<!-- <uni-row > -->
 						<navigator style="display: flex;" :url="item.navigateUrl" hover-class="navigator-hover">
-							<view style="width: 20%;"><image style="width: 80rpx;height: 80rpx;" :src="item.imgurl"></image></view>
+							<view style="width: 20%;">
+								<image style="width: 80rpx;height: 80rpx;" :src="item.imgurl"></image>
+							</view>
 							<view style="width: 60%; line-height: 80rpx;" span="15" class="name">{{item.name}}</view>
 							<view style="width: 20%;line-height: 80rpx;" span="4">></view>
 						</navigator>
-					<!-- </uni-row> -->
-					
+						<!-- </uni-row> -->
+
 					</view>
 				</view>
 			</view>
@@ -111,13 +116,13 @@
 				<button type="default" @click="cunChuZHMM()">点击确认</button>
 			</view>
 		</uni-popup>
-		
+
 		<!-- 弹出层-填写反馈内容 -->
 		<uni-popup ref="fanKui" type="bottom" @close="onClose">
 			<view class="tanchuceng">
-				<textarea @input="fanKuiNeiRongFun" class="shuRuKuang" placeholder="也可以联系开发者QQ哦:2695743645"
+				<textarea maxlength="10" @input="fanKuiNeiRongFun" class="shuRuKuang" placeholder="请输入新用户名"
 					auto-height></textarea>
-				<button class="fanKuiAnNiu" color="#00aaff" @click="fanKui">点击反馈</button>
+				<button class="fanKuiAnNiu" color="#00aaff" @click="fanKui">确认</button>
 			</view>
 		</uni-popup>
 
@@ -271,7 +276,7 @@
 													res.data.data);
 												that.forumUsername =
 													res.data.data;
-													
+
 											}
 										})
 									} else if (res.data.a == false) {
@@ -302,6 +307,10 @@
 			this.getSystemTime();
 		},
 		methods: {
+			//改变用户名
+			changeUserName(){
+					
+			},
 			// 改绑学号
 			xiuGaiXueHaoMiMa(res) {
 				var that = this;
@@ -327,18 +336,18 @@
 					}
 				});
 			},
-			
+
 			// 实时获取反馈内容
 			fanKuiNeiRongFun(res) {
 				this.fanKuiNeiRong = res.detail.value;
 			},
-			
+
 			// 点击开发者反馈弹出上拉框
 			fanKuiKuang(res) {
 				this.$refs.fanKui.open();
 			},
-			
-			// 反馈按钮
+
+			// 修改用户名
 			fanKui(result) {
 				var that = this;
 				if (that.fanKuiNeiRong != null) {
@@ -347,23 +356,31 @@
 					});
 					uni.request({
 						//  url: 'https://localhost:8088/jianYi/set1',
-						url: 'https://172.20.149.44:8088/jianYi/set1',
+						url: 'https://172.20.149.44:8088/userInfo/wechat/changeUserName',
 						method: 'POST',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
 						},
 						data: {
-							message: that.fanKuiNeiRong
+							userName: that.fanKuiNeiRong,
+							openid:that.openid
 						},
 						success: (res) => {
 							//关闭上拉框
 							that.$refs.fanKui.close();
 							uni.hideToast({});
+							if(res.data.a){
+								uni.reLaunch({
+									url:"/pages/user/user"
+								})
+								
+							}
+
 						}
 					});
 				}
 			},
-			
+
 			//更新课表，直接去后台把它旧课表给删了就好了
 			gengXinKeBiao(res) {
 				console.log("更新课表")
@@ -581,7 +598,7 @@
 				uni.hideLoading()
 			},
 		},
-		
+
 		onClose() {
 			console.log('占位：函数 onClose 未声明');
 		}
@@ -589,6 +606,14 @@
 </script>
 
 <style>
+	/* 修改用户名 */
+	.changeUserName {
+		text-align: center;
+		border: white solid 1px;
+		width: 10%;
+		margin-left: 45%;
+	}
+
 	/* 修改学号密码 */
 	.xuanXiang {
 		padding-top: 30rpx;
@@ -598,12 +623,12 @@
 		height: 300rpx;
 		margin: 0 auto;
 	}
-	
+
 	.alltext {
-		margin-left: 30rpx;
-		margin-top: 70rpx;
+		line-height: 80rpx;
+		margin-left: 20rpx;
 	}
-	
+
 	.xuanXiang image {
 		margin-top: 10rpx;
 		width: 40rpx;
@@ -611,40 +636,31 @@
 		float: right;
 		padding-right: 50rpx;
 	}
-	
-	.zhuXiao{
-		margin-left: 40rpx;
+
+	.zhuXiao {
+		margin: 15rpx 0 0 10%;
 		width: 80%;
 		height: 80rpx;
 		background-color: bisque;
 		border-radius: 10rpx;
-		align-items: center;
-		vertical-align: center;
-		justify-content: center;
 	}
-	.fankui{
-		margin-top: 10rpx;
-		margin-left: 40rpx;
+
+	.fankui {
+		margin: 15rpx 0 0 10%;
 		width: 80%;
 		height: 80rpx;
 		background-color: bisque;
 		border-radius: 10rpx;
-		align-items: center;
-		vertical-align: center;
-		justify-content: center;
 	}
-	.gengxin{
-		margin-top: 10rpx;
-		margin-left: 40rpx;
+
+	.gengxin {
+		margin: 15rpx 0 0 10%;
 		width: 80%;
 		height: 80rpx;
 		background-color: bisque;
 		border-radius: 10rpx;
-		align-items: center;
-		vertical-align: center;
-		justify-content: center;
 	}
-	
+
 	/* 给我反馈 */
 	.tanchuceng {
 		background-color: darkseagreen;
@@ -652,7 +668,7 @@
 		height: 50%;
 		width: 100%;
 	}
-	
+
 	.shuRuKuang {
 		background-color: aliceblue;
 		border: 1px solid #00000059;
@@ -660,13 +676,13 @@
 		width: 90%;
 		border-radius: 8px;
 	}
-	
+
 	.fanKuiAnNiu {
 		display: flex;
 		margin: 0 auto;
 	}
-	
-	.ac{
+
+	.ac {
 		border-bottom: 1px solid red;
 		color: red;
 		/* border-bottom: 1px solid #ffac05;
@@ -735,10 +751,10 @@
 		padding: 5rpx 25rpx;
 		line-height: 38rpx;
 	}
-	
+
 	.navItem .navContent {
-	    padding: 5rpx 20rpx;
-	    line-height: 38rpx;
+		padding: 5rpx 20rpx;
+		line-height: 38rpx;
 	}
 
 	/* 设置里面的东西 */
@@ -774,6 +790,7 @@
 		color: #f54933;
 		text-align: center;
 	}
+
 	/* 每个今日课表框里面的每行 */
 
 	.keBiaoSimpleShow .ke_info {
@@ -783,7 +800,7 @@
 		/* width: 85%; */
 		/* height:auto; */
 		background-color: rgba(0, 0, 0, 0.432);
-		
+
 		float: left;
 		width: 45%;
 		color: white;
@@ -805,7 +822,7 @@
 		width: 90%;
 		border-radius: 30rpx;
 		/* background-color: white; */
-		
+
 	}
 
 	.anNiu .chengJi {
@@ -815,14 +832,16 @@
 		margin-top: 20rpx;
 		border-radius: 25rpx;
 		padding: 15rpx 0 15rpx 0;
-		
-		
+
+
 	}
-	.anNiu .chengJi .name{
+
+	.anNiu .chengJi .name {
 		font-weight: 800;
 		letter-spacing: 5rpx;
-		
+
 	}
+
 	.anNiu .chengJi image {
 		width: 80rpx;
 		height: 80rpx;

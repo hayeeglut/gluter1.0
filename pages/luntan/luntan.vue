@@ -361,7 +361,7 @@
 	.dianZan .reply_number {
 		width: 20%;
 		font-size: 30rpx;
-		text-align: center;
+		/* text-align: center; */
 
 	}
 
