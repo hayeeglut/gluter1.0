@@ -60,6 +60,7 @@
 			//获取localStorage的openid
 			that.openid=uni.getStorageSync("openid");
 			console.log("openid："+that.openid)
+			that.userName=uni.getStorageSync("forumUsername");
 		},
 		methods: {
 			//测试图片选择
@@ -163,6 +164,7 @@
 					 	data: {
 					 		openid:that.openid,
 							title:that.form.title,
+							userName:that.userName,
 							context:that.form.content,
 							tag:that.form.tag,
 							upLoadTime:new Date().valueOf()
