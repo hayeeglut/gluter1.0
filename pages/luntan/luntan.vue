@@ -1,9 +1,29 @@
 <template>
+	<!-- 发布帖子按钮 -->
+	<view class="fabuBTN" @click="jumpToFaBu()">
+		<image src="../../static/chatArea/fabu.png" mode="aspectFit">发帖</image>
+	</view>
 	<view style="height: 100%">
 		<!-- 公告区 -->
-		<uni-notice-bar @click="jumpToFaBu()" left-icon="volume-o" text="点我进入发布帖子(暂时)"></uni-notice-bar>
+		<uni-notice-bar @click="notice()" background-color="#ecf9ff" single="true" color="#2979FF"
+			showGetMore="true" showIcon="true" text="论坛规则(暂行)"></uni-notice-bar>
+			
+		<!-- 通知公告弹出窗口 -->
+		<uni-popup ref="notice" type="dialog">
+			<uni-popup-dialog :type="msgType" cancelText="关闭" title="论坛守则(必看!!!)" @close="dialogClose" @confirm="dialogConfirm">
+				<!-- 通知公告栏 -->
+				<view class="tongZhiGongGao">
+					<scroll-view scroll-y="true">
+						<view>
+							<view class="neiRong" v-for="item,key in chatAreaRules" :key="key">{{item}}</view>
+						</view>
+					</scroll-view>
+				</view>
+			</uni-popup-dialog>
+		</uni-popup>
+		
+		
 		<!-- 块级区域 -->
-		<!-- 		<view class=""></view> -->
 		<!-- 帖子区域 -->
 		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId" @click="jumpToTip(item)">
 			<view class="zongTieZi">
@@ -84,6 +104,7 @@
 				startPage: 0,
 				//openid
 				openid: "",
+				chatAreaRules:[],//社区守则
 				photoServerUrl: "http://124.220.207.245:8080/images/" //图片服务器
 
 			}
@@ -97,6 +118,8 @@
 			that.openid = uni.getStorageSync("openid");
 			//首先获取分页帖子
 			that.getTipsByPage()
+			//获取社区规则
+			that.getChatAreaRules()
 		},
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
@@ -141,6 +164,34 @@
 			})
 		},
 		methods: {
+			// 通知显示与关闭
+			notice(type) {
+				this.msgType = type
+				this.$refs.notice.open()
+			},
+			//获取论坛规则
+			getChatAreaRules(){
+				var that = this
+				uni.request({
+					url: "https://172.20.149.44:8088/tongZhi/getChatAreaRules",
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					method: 'POST',
+					success: (res) => {
+						if(res.data.a){
+							that.chatAreaRules=res.data.data;
+							//当thatAreaRules准备好后调用notice，让用户强制浏览论坛守则
+							var interval = setInterval(function(){
+								if(that.chatAreaRules!=null)
+								that.notice()
+								//首先去结束定时器
+								clearInterval(interval)
+							},200)
+						}
+					}
+				})
+			},
 			//跳转至发布帖子页面
 			jumpToFaBu(){
 				uni.navigateTo({
@@ -214,7 +265,30 @@
 		z-index: 0;
 		background-color: #f5f5f5;
 	}
-
+	
+	/* 通知公告栏 */
+	.tongZhiGongGao {
+	width: 100%;
+    margin: 0 auto;
+    padding: 10rpx 0 0 0;
+	}
+	
+	.tongZhiGongGao .neiRong {
+		padding-right: 20rpx;
+		padding-top: 5rpx;
+	}
+	
+	.tongZhiGongGao scroll-view {
+		height: 800rpx;
+	}
+	/* 发布按钮 */
+	.fabuBTN image{
+		    width: 80rpx;
+		    height: 80rpx;
+		    position: fixed;
+		    left: 85%;
+		    top: 80%;
+	}
 	/* 图片展示 */
 	.tieZiBaBa .photo {
 		margin-top: 5px;
