@@ -246,7 +246,10 @@
 								// 如果比一天还多 这条可以将时间戳转换成日期格式
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 > 86400) res.data.data[
 									i].upDateTime = calculateWeek.formatTime(res.data.data[i].upDateTime);
-
+									
+								// 无论怎么样，upLoadTime也要转化
+								res.data.data[
+									i].upLoadTime = calculateWeek.formatTime(res.data.data[i].upLoadTime);
 							}
 							Array.prototype.push.apply(that.chatAreaList, res.data.data);
 						}
