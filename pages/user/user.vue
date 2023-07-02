@@ -118,10 +118,9 @@
 		</uni-popup>
 
 		<!-- 弹出层-填写反馈内容 -->
-		<uni-popup ref="fanKui" type="bottom" @close="onClose">
+		<uni-popup ref="fanKui" type="center">
 			<view class="tanchuceng">
-				<textarea maxlength="10" @input="fanKuiNeiRongFun" class="shuRuKuang" placeholder="请输入新用户名"
-					auto-height></textarea>
+				<input type="text" @input="fanKuiNeiRongFun" class="shuRuKuang" auto-focus="" placeholder="请输入新用户名" />
 				<button class="fanKuiAnNiu" color="#00aaff" @click="fanKui">确认</button>
 			</view>
 		</uni-popup>
@@ -307,10 +306,6 @@
 			this.getSystemTime();
 		},
 		methods: {
-			//改变用户名
-			changeUserName(){
-					
-			},
 			// 改绑学号
 			xiuGaiXueHaoMiMa(res) {
 				var that = this;
@@ -350,9 +345,16 @@
 			// 修改用户名
 			fanKui(result) {
 				var that = this;
+				if (that.fanKuiNeiRong.length >= 15){
+					uni.showToast({
+						title: '请重新输入用户名',
+						duration:1000
+					});
+					return;
+				}
 				if (that.fanKuiNeiRong != null) {
 					uni.showToast({
-						title: '反馈提交中……'
+						title: '用户名提交中……'
 					});
 					uni.request({
 						//  url: 'https://localhost:8088/jianYi/set1',
@@ -373,9 +375,7 @@
 								uni.reLaunch({
 									url:"/pages/user/user"
 								})
-								
 							}
-
 						}
 					});
 				}
@@ -663,23 +663,24 @@
 
 	/* 给我反馈 */
 	.tanchuceng {
-		background-color: darkseagreen;
-		border-radius: 8px;
-		height: 50%;
-		width: 100%;
+		padding-top: 15rpx;
+		background-color: aliceblue;
+		border-radius: 10px;
 	}
 
 	.shuRuKuang {
-		background-color: aliceblue;
-		border: 1px solid #00000059;
-		margin: 10px auto;
+		height: 70rpx;
+		color: black;
+		border-radius: 10rpx;
+		border: 1rpx solid #c8cccf;
+		margin: auto;
 		width: 90%;
-		border-radius: 8px;
 	}
 
 	.fanKuiAnNiu {
+		border-radius: 10rpx;
 		display: flex;
-		margin: 0 auto;
+		margin: auto;
 	}
 
 	.ac {
