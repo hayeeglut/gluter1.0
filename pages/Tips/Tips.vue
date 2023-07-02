@@ -22,6 +22,7 @@
 	</view>
 
 	<!-- 主要内容 -->
+	<!-- 我拉个最新版本 -->
 	<view class="content">
 		{{tipDetail.context}}
 	</view>
