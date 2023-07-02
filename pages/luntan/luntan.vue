@@ -427,6 +427,7 @@
 	
 	/* 次要tag */
 	.dianZan .commonTag{
+		margin-left: 10%;
 		width: 25%;
 		text-align: center;
 		background-color: #8fe4ff;
@@ -436,7 +437,7 @@
 	
 	/* 进入评论区旁边那个计数 */
 	.dianZan .reply_number {
-		width: 20%;
+		width: 12%;
 		font-size: 30rpx;
 		/* text-align: center; */
 
