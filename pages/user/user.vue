@@ -231,7 +231,7 @@
 					console.log(event, '获取code');
 					//客户端成功获取授权临时票据（code）,向业务服务器发起登录请求。
 					uni.request({
-						url: 'https://172.20.149.44:8088/wx_get_true_openid/get',
+						url: 'https://neeeeeeebs.top:8088/wx_get_true_openid/get',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
 						},
@@ -246,7 +246,7 @@
 							console.log('Page Load')
 							//去userinfo表查找是否存在用户
 							uni.request({
-								url: "https://172.20.149.44:8088/userInfo/wechat/find_user",
+								url: "https://neeeeeeebs.top:8088/userInfo/wechat/find_user",
 								header: {
 									'content-type': 'application/x-www-form-urlencoded'
 								},
@@ -261,7 +261,7 @@
 										//可以进行课表请求
 										that.getKeBiao();
 										uni.request({
-											url: "https://172.20.149.44:8088/userInfo/wechat/getUserName",
+											url: "https://neeeeeeebs.top:8088/userInfo/wechat/getUserName",
 											header: {
 												'content-type': 'application/x-www-form-urlencoded'
 											},
@@ -312,7 +312,7 @@
 				var that = this;
 				uni.request({
 					// url: 'https://localhost:8088/userInfo/wechat/deleteUser',
-					url: 'https://172.20.149.44:8088/userInfo/wechat/deleteUser',
+					url: 'https://neeeeeeebs.top:8088/userInfo/wechat/deleteUser',
 					method: 'POST',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -359,7 +359,7 @@
 					});
 					uni.request({
 						//  url: 'https://localhost:8088/jianYi/set1',
-						url: 'https://172.20.149.44:8088/userInfo/wechat/changeUserName',
+						url: 'https://neeeeeeebs.top:8088/userInfo/wechat/changeUserName',
 						method: 'POST',
 						header: {
 							'content-type': 'application/x-www-form-urlencoded'
@@ -389,7 +389,7 @@
 				//后台请求删除课表
 				uni.request({
 					// url: 'https://localhost:8088/keBiao/wechat/reNewKeBiao',
-					url: 'https://172.20.149.44:8088/keBiao/wechat/reNewKeBiao',
+					url: 'https://neeeeeeebs.top:8088/keBiao/wechat/reNewKeBiao',
 					method: 'POST',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -456,7 +456,7 @@
 			//将获取通知公告请求独立
 			getTongZhi() {
 				uni.request({
-					url: 'https://172.20.149.44:8088/tongZhi/getToolTop',
+					url: 'https://neeeeeeebs.top:8088/tongZhi/getToolTop',
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -495,7 +495,7 @@
 				})
 				var that = this;
 				uni.request({
-					url: "https://172.20.149.44:8088/userInfo/wechat/createUser",
+					url: "https://neeeeeeebs.top:8088/userInfo/wechat/createUser",
 					method: "POST",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -528,7 +528,7 @@
 			getKeBiao(res) {
 				var that = this;
 				uni.request({
-					url: "https://172.20.149.44:8088/keBiao/wechat/getKeBiao",
+					url: "https://neeeeeeebs.top:8088/keBiao/wechat/getKeBiao",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},

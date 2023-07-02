@@ -159,7 +159,7 @@
 		onPullDownRefresh(e) {
 			var that = this;
 			console.log("用户下拉论坛刷新")
-			uni.redirectTo({
+			uni.reLaunch({
 				url: "/pages/luntan/luntan"
 			})
 		},
@@ -173,7 +173,7 @@
 			getChatAreaRules(){
 				var that = this
 				uni.request({
-					url: "https://172.20.149.44:8088/tongZhi/getChatAreaRules",
+					url: "https://neeeeeeebs.top:8088/tongZhi/getChatAreaRules",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -210,7 +210,7 @@
 			getTipsByPage(e) {
 				var that = this
 				uni.request({
-					url: "https://172.20.149.44:8088/chatArea/wechat/getTipsByPage",
+					url: "https://neeeeeeebs.top:8088/chatArea/wechat/getTipsByPage",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
