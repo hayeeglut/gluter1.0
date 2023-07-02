@@ -166,7 +166,7 @@
 							//对帖子进行回复
 							if(that.replyStatus==1){
 								uni.request({
-									url: "https://neeeeeeebs.top:8088/chatArea/wechat/upReplyToTip",
+									url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyToTip",
 									header: {
 										'content-type': 'application/x-www-form-urlencoded'
 									},
@@ -194,7 +194,7 @@
 							//对某个回复进行楼中楼回复
 							if(that.replyStatus==2){
 								uni.request({
-									url: "https://neeeeeeebs.top:8088/chatArea/wechat/upReplyReply",
+									url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyReply",
 									header: {
 										'content-type': 'application/x-www-form-urlencoded'
 									},
@@ -230,7 +230,7 @@
 			getTipDetailReply(item) {
 				var that = this;
 				uni.request({
-					url: "https://neeeeeeebs.top:8088/chatArea/wechat/getTipContext",
+					url: "https://neeeeeeebs.fit:8088/chatArea/wechat/getTipContext",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},

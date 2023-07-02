@@ -173,7 +173,7 @@
 			getChatAreaRules(){
 				var that = this
 				uni.request({
-					url: "https://neeeeeeebs.top:8088/tongZhi/getChatAreaRules",
+					url: "https://neeeeeeebs.fit:8088/tongZhi/getChatAreaRules",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},
@@ -210,7 +210,7 @@
 			getTipsByPage(e) {
 				var that = this
 				uni.request({
-					url: "https://neeeeeeebs.top:8088/chatArea/wechat/getTipsByPage",
+					url: "https://neeeeeeebs.fit:8088/chatArea/wechat/getTipsByPage",
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
 					},

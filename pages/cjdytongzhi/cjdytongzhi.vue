@@ -43,8 +43,8 @@
 			getHelpInfo(){
 			    var that = this;
 			    uni.request({
-			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/delete_subscrip',
-			        url: 'https://neeeeeeebs.top:8088/tongZhi/getCJDY',
+			        // url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/delete_subscrip',
+			        url: 'https://neeeeeeebs.fit:8088/tongZhi/getCJDY',
 			        header: {
 			            'content-type': 'application/x-www-form-urlencoded'
 			        },
@@ -73,8 +73,8 @@
 			delete_subscrip() {
 			    var that = this;
 			    uni.request({
-			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/delete_subscrip',
-			        url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/delete_subscrip',
+			        // url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/delete_subscrip',
+			        url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/delete_subscrip',
 			        header: {
 			            'content-type': 'application/x-www-form-urlencoded'
 			        },
@@ -95,8 +95,8 @@
 			sub_status_query() {
 			    var that = this;
 			    uni.request({
-			        // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/sub_status_query',
-			        url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/sub_status_query',
+			        // url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/sub_status_query',
+			        url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/sub_status_query',
 			        header: {
 			            'content-type': 'application/x-www-form-urlencoded'
 			        },
@@ -143,8 +143,8 @@
 			        success(res) {
 			            //订阅确认完了再向后端发送请求
 			            uni.request({
-			                // url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/subscrip_confirm',
-			                url: 'https://neeeeeeebs.top:8088/exam_query_test/wechat/subscrip_confirm',
+			                // url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/subscrip_confirm',
+			                url: 'https://neeeeeeebs.fit:8088/exam_query_test/wechat/subscrip_confirm',
 			                header: {
 			                    'content-type': 'application/x-www-form-urlencoded'
 			                },

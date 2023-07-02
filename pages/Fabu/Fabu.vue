@@ -152,7 +152,7 @@
 					 //首先进行title content推送
 					 var that=this;
 					 uni.request({
-					 	url: "https://neeeeeeebs.top:8088/chatArea/wechat/upLoadChatTip",
+					 	url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upLoadChatTip",
 					 	header: {
 					 		'content-type': 'application/x-www-form-urlencoded'
 					 	},
@@ -171,7 +171,7 @@
 								//此时res.data.data就是返回的后端关于这条主键id
 								//对图片进行逐张上传
 								for(let i=0;i<that.form.imageFileList.length;i++){
-									that.upload_file("https://neeeeeeebs.top:8088/chatArea/wechat/upLoadImage",that.form.imageFileList[i].tempFilePath,res.data.data)
+									that.upload_file("https://neeeeeeebs.fit:8088/chatArea/wechat/upLoadImage",that.form.imageFileList[i].tempFilePath,res.data.data)
 								}
 								/**
 								 * 粗暴办法，每500ms检查一次是否上传完毕，上传完毕就退出，不然永远不退出
@@ -179,10 +179,13 @@
 								var interval = setInterval(function(){
 									console.log(that.imageSuccessCount)
 									console.log(that.form.imageFileList.length)
-									if(that.imageSuccessCount==that.form.imageFileList.length)
-									that.checkUpSuccess()
-									//首先去结束定时器
-									clearInterval(interval)
+									if(that.imageSuccessCount==that.form.imageFileList.length){
+										console.log("图片上传完成")
+										that.checkUpSuccess()
+										//首先去结束定时器
+										clearInterval(interval)
+									}
+
 								},500)
 					 		}
 					 	}
