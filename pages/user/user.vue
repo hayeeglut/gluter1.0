@@ -66,7 +66,7 @@
 					<image src="../../static/images/shezhi/xiaolian.png"></image>
 				</view>
 				<!-- 反馈 -->
-<!-- 				<view class="fankui" @click="fanKuiKuang()">
+				<!-- 				<view class="fankui" @click="fanKuiKuang()">
 					<text class="alltext">给开发者反馈</text>
 					<image src="../../static/images/shezhi/fanzhuanxiaolian.png"></image>
 				</view> -->
@@ -306,6 +306,7 @@
 			this.getSystemTime();
 		},
 		methods: {
+			
 			// 改绑学号
 			xiuGaiXueHaoMiMa(res) {
 				var that = this;
@@ -345,10 +346,10 @@
 			// 修改用户名
 			fanKui(result) {
 				var that = this;
-				if (that.fanKuiNeiRong.length >= 15){
+				if (that.fanKuiNeiRong.length >= 15 || that.fanKuiNeiRong == "") {
 					uni.showToast({
 						title: '请重新输入用户名',
-						duration:1000
+						duration: 1000
 					});
 					return;
 				}
@@ -365,15 +366,15 @@
 						},
 						data: {
 							userName: that.fanKuiNeiRong,
-							openid:that.openid
+							openid: that.openid
 						},
 						success: (res) => {
 							//关闭上拉框
 							that.$refs.fanKui.close();
 							uni.hideToast({});
-							if(res.data.a){
+							if (res.data.a) {
 								uni.reLaunch({
-									url:"/pages/user/user"
+									url: "/pages/user/user"
 								})
 							}
 						}
@@ -606,6 +607,7 @@
 </script>
 
 <style>
+	
 	/* 修改用户名 */
 	.changeUserName {
 		text-align: center;
