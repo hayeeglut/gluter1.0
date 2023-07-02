@@ -27,8 +27,8 @@
 	</view>
 	<!-- 图片展示 -->
 	<view class="photoList">
-		<image class="tipImage" mode="widthFix" v-for="Tieimage, index1 in tipDetail.photoUrlList"
-			:key="index1" :src="this.photoServerUrl+Tieimage"></image>
+		<image class="tipImage" mode="widthFix" v-for="Tieimage, index1 in tipDetail.photoUrlList" :key="index1"
+			:src="this.photoServerUrl+Tieimage"></image>
 	</view>
 	<!-- 功能区域 -->
 	<view class="function">
@@ -41,7 +41,7 @@
 		</view>
 		<!-- 刷新 -->
 		<view class="refresh">
-			<image src="../../static/tip/shuaxin.png" mode="aspectFit"></image>
+			<image src="../../static/tip/reply.png" mode="aspectFit"></image>
 			<view class="">
 				刷新
 			</view>
@@ -57,20 +57,32 @@
 	<!-- 分割线 -->
 	<uv-divider text=""></uv-divider>
 	<!-- 回复区域 -->
-	<view class="replyZone" v-for="(item,index) in tipReplyDetail"
-			:key="index">
-		<view class="replyInfo">
-			<!-- 用户名 -->
-			<view class="userName">
-				同学&nbsp;&nbsp;{{item.replyUserName}}
+	<view class="replyZone" v-for="(item,index) in tipReplyDetail" :key="index">
+		<!-- 某回复区块 -->
+		<view class="replyInfo1">
+			<view class="replyInfo2">
+				<!-- 用户名 -->
+				<view class="userName">
+					同学&nbsp;&nbsp;{{item.replyUserName}}
+				</view>
+				<!-- 时间信息 -->
+				<view class="upLoadTime">
+					第{{index+1}}楼&nbsp;回复时间&nbsp;:{{item.replyTime}}
+				</view>
 			</view>
-			<!-- 时间信息 -->
-			<view class="upLoadTime">
-				第{{index+1}}楼&nbsp;回复时间&nbsp;:{{item.replyTime}}
+			<!-- 对回复进行回复按钮 -->
+			<view class="replyToReplyBtn">
+				回复
 			</view>
-			<!-- 回复内容 -->
-			<view class="replyContent">
-				{{item.replyContext}}
+		</view>
+		<!-- 回复内容 -->
+		<view class="replyContent">
+			{{item.replyContext}}
+		</view>
+		<!-- 对帖子某回复的楼中楼进行vfor -->
+		<view class="replyToReplyList" >
+			<view class="replyToReplyInfo" v-for="(item,index2) in item.tipReplyReplyList" :key="index2">
+				同学&nbsp;{{item.replyUserName}}&nbsp;:&nbsp;{{item.context}}
 			</view>
 		</view>
 		<!-- 分割线 -->
@@ -136,69 +148,111 @@
 		width: 95%;
 		margin-left: 2.5%;
 	}
-	.info{
+
+	.info {
 		display: flex;
 		margin-top: 30rpx;
 	}
-	.userInfo{
+
+	.userInfo {
 		margin-left: 10rpx;
 		width: 90%;
 	}
-	.userName{
+
+	.userName {
 		color: sienna;
 	}
-	.upLoadTime{
-		    color: cornflowerblue;
+
+	.upLoadTime {
+		color: cornflowerblue;
 	}
-	.touXiang{
+
+	.touXiang {
 		width: 10%;
 	}
-	.touXiang image{
+
+	.touXiang image {
 		width: 65rpx;
 		height: 65rpx;
 	}
+
 	/* 标题 */
 	.title {
-		    margin-top: 30rpx;
+		margin-top: 30rpx;
 		font-size: 45rpx;
 		font-weight: 600;
 	}
+
 	/* 用户名 */
-	.userName{
-		
-	}
+	.userName {}
+
 	/* 主要内容 */
-	.content{
+	.content {
 		margin-top: 30rpx;
 	}
-	.photoList{
-		    margin-top: 30rpx;
+
+	.photoList {
+		margin-top: 30rpx;
 	}
+
 	/* 图片 */
-	.tipImage{
+	.tipImage {
 		width: 100%;
 	}
-	.function{
+
+	/* 功能区 */
+	.function {
 		margin-top: 30rpx;
 		display: flex;
 	}
-	.function .tipCount{
-		width: 33%;
-	    text-align: center;
-	
-	}
-	.function .refresh{
-		width: 33%;
-	    text-align: center;
-	
-	}
-	.function .report{
+
+	.function .tipCount {
 		width: 33%;
 		text-align: center;
 
 	}
-	.function image{
+
+	.function .refresh {
+		width: 33%;
+		text-align: center;
+
+	}
+
+	.function .report {
+		width: 33%;
+		text-align: center;
+
+	}
+
+	.function image {
 		width: 65rpx;
 		height: 65rpx;
+	}
+	
+	/* 回复总设置 */
+	.replyZone{
+		
+	}
+		
+	.replyInfo1{
+		display: flex;
+	}
+	.replyInfo2{
+		width: 80%;
+	}
+		
+	.replyToReplyBtn{
+		width: 20%;
+	}
+	.replyContent{
+		margin: 10rpx 0 10rpx 0;
+	}
+	.replyToReplyList{
+		    background-color: #9bb3b747;
+		    width: 90%;
+		    border-radius: 10rpx;
+	}
+	.replyToReplyInfo{
+		margin: 5rpx 0 5rpx 10rpx;
 	}
 </style>
