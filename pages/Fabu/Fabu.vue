@@ -138,17 +138,13 @@
 				 * 然后再一张一张发送图片，图片需要附上tipId
 				 * */
 				 //首先判断title content 是不是空的
-				 if(that.form.content==''){
-					uni.showToast({
-						title:"内容不能为空~",
-						duration:2000
-					}) 
-				 }
-				 if(that.form.title==''){
+				 if(that.form.title=='' || that.form.content==''){
 					 uni.showToast({
-					 	title:"标题不能为空~",
-					 	duration:2000
-					 }) 
+					 	title:"标题与内容不能为空~",
+					 	duration:2000,
+						icon: "none"
+					 })
+					 return;
 				 }
 				 //内容齐全
 				 else{
