@@ -23,7 +23,7 @@
 		<view class="personInfo">
 
 			<view class="userInfo">
-				<image class="image-bg" src="../../static/images/user/userinfobackground.jpg" mode="center"></image>
+				<image class="image-bg" src="http://124.220.207.245:8080/images/bizhi.png" mode="center"></image>
 				<view>
 					<image class="avatar" src="../../static/images/user/zhutou.jpg" mode="scaleToFill"></image>
 				</view>
@@ -184,7 +184,7 @@
 				JESSIONID: '',
 				//图标信息
 				tuBiao: [{
-						"imgurl": "../../static/images/tool_images/chengJi.png",
+						"imgurl": "../../static/images/tool_images/chengji.png",
 						"name": "成绩查询",
 						"navigateUrl": "../chengjichaxun/chengjichaxun"
 					}, {
@@ -223,6 +223,7 @@
 			//获取uni.login
 			uni.showLoading({
 				title: '少女祈祷中...',
+				mask:true
 			});
 			uni.login({
 				"provider": "weixin",
@@ -492,6 +493,7 @@
 			createUser(res) {
 				uni.showLoading({
 					title: '少女祈祷中...',
+					mask:true
 				})
 				var that = this;
 				uni.request({

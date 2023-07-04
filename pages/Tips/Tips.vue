@@ -114,7 +114,8 @@
 				tipDetail: [], //帖子内容
 				tipReplyDetail: [],
 				photoServerUrl: "http://124.220.207.245:8080/images/" ,//图片服务器,
-				replyPlaceHolder:""
+				replyPlaceHolder:"",
+				replyContent:""
 			}
 		},
 		/**
@@ -163,67 +164,76 @@
 						// 提交回复内容(略，你应该写有)
 						reply(res){
 							var that=this;
-							//对帖子进行回复
-							if(that.replyStatus==1){
-								uni.request({
-									url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyToTip",
-									header: {
-										'content-type': 'application/x-www-form-urlencoded'
-									},
-									method: 'POST',
-									data: {
-										"tipId": that.tipDetail.tipId,
-										"replyUserOpenid":that.openid,
-										"replyUserName":that.userName,
-										"replyContext":that.replyContent,
-										"replyTime":new Date().valueOf()
-									},
-									success: (res) => {
-										if (res.data.a) {
-											uni.showToast({
-												title:"回复成功",
-												duration:2000
-											})
-											this.$refs.reply.close();
-											//成功后，重新获取帖子
-											that.getTipDetailReply(that.tipDetail);
-										}
-									}
+							if(that.replyContent==""){
+								uni.showToast({
+									title:"不能为空哦",
+									duration:2000
 								})
-							}
-							//对某个回复进行楼中楼回复
-							if(that.replyStatus==2){
-								uni.request({
-									url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyReply",
-									header: {
-										'content-type': 'application/x-www-form-urlencoded'
-									},
-									method: 'POST',
-									data: {
-										"tipId":that.tipDetail.tipId,
-										"tipReplyId": that.tipReplyId,
-										"replyUserOpenid":that.openid,
-										"replyUserName":that.userName,
-										"replyContext":that.replyContent,
-										"replyTime":new Date().valueOf()
-									},
-									success: (res) => {
-										if (res.data.a) {
-											uni.showToast({
-												title:"回复成功",
-												duration:2000
-											})
-											this.$refs.reply.close();
-											//成功后，重新获取帖子
-											that.getTipDetailReply(that.tipDetail);
+							}else{
+								//对帖子进行回复
+								if(that.replyStatus==1){
+									uni.request({
+										url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyToTip",
+										header: {
+											'content-type': 'application/x-www-form-urlencoded'
+										},
+										method: 'POST',
+										data: {
+											"tipId": that.tipDetail.tipId,
+											"replyUserOpenid":that.openid,
+											"replyUserName":that.userName,
+											"replyContext":that.replyContent,
+											"replyTime":new Date().valueOf()
+										},
+										success: (res) => {
+											if (res.data.a) {
+												uni.showToast({
+													title:"回复成功",
+													duration:2000
+												})
+												this.$refs.reply.close();
+												//成功后，重新获取帖子
+												that.getTipDetailReply(that.tipDetail);
+											}
 										}
-									}
-								})
+									})
+								}
+								//对某个回复进行楼中楼回复
+								if(that.replyStatus==2){
+									uni.request({
+										url: "https://neeeeeeebs.fit:8088/chatArea/wechat/upReplyReply",
+										header: {
+											'content-type': 'application/x-www-form-urlencoded'
+										},
+										method: 'POST',
+										data: {
+											"tipId":that.tipDetail.tipId,
+											"tipReplyId": that.tipReplyId,
+											"replyUserOpenid":that.openid,
+											"replyUserName":that.userName,
+											"replyContext":that.replyContent,
+											"replyTime":new Date().valueOf()
+										},
+										success: (res) => {
+											if (res.data.a) {
+												uni.showToast({
+													title:"回复成功",
+													duration:2000
+												})
+												this.$refs.reply.close();
+												//成功后，重新获取帖子
+												that.getTipDetailReply(that.tipDetail);
+											}
+										}
+									})
+								}
 							}
+							
 						},
 						// 回复内容更改
 						replyContentSettings(res){
 							this.replyContent = res.detail.value;
+							console.log(this.replyContent)
 						},
 
 			//获取帖子详细信息的帖子

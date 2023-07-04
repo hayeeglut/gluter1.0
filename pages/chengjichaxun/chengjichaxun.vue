@@ -103,7 +103,8 @@
 			onLoadClone3389(options) {
 				var that = this;
 				uni.showLoading({
-					title: '获取中...'
+					title: '获取中...',
+					mask:true
 				});
 				var that = this;
 				//写个新的获取成绩

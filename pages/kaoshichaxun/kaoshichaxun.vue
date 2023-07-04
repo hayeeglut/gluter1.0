@@ -62,7 +62,8 @@
 		onLoad() {
 			var that = this;
 			uni.showLoading({
-				title: '获取中...'
+				title: '获取中...',
+				mask:true
 			});
 			//首先需要获取用户的openid
 			that.openid = uni.getStorageSync('openid');

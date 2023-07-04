@@ -129,7 +129,8 @@
 			 clickCreate() {
 				//加载动画
 				uni.showLoading({
-					title:"上传中..."
+					title:"上传中...",
+					mask:true
 				})
 				var that=this;
 				console.log(that.form)
@@ -138,7 +139,7 @@
 				 * 然后再一张一张发送图片，图片需要附上tipId
 				 * */
 				 //首先判断title content 是不是空的
-				 if(that.form.title=='' || that.form.content==''){
+				 if(that.form.title=='' && that.form.content==''){
 					 uni.showToast({
 					 	title:"标题与内容不能为空~",
 					 	duration:2000,

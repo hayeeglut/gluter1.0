@@ -116,6 +116,12 @@
 			var that = this;
 			//获取localStorage的openid
 			that.openid = uni.getStorageSync("openid");
+			console.log(that.openid)
+			if(that.openid==""){
+				uni.reLaunch({
+					url: "/pages/user/user"
+				})
+			}
 			//首先获取分页帖子
 			that.getTipsByPage()
 			//获取社区规则
@@ -124,7 +130,9 @@
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
 		 */
-		onReady: function(e) {},
+		onReady: function(e) {
+			console.log("页面加载完成")
+		},
 		/**
 		 * 生命周期函数--监听页面显示
 		 */

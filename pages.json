@@ -2,21 +2,21 @@
 	"pages": [{
 		"path": "pages/user/user",
 		"style": {
-			"navigationBarTitleText": "桂工小帮手",
+			"navigationBarTitleText": "小桂屋",
 			"enablePullDownRefresh": true
 		}
 
 	}, {
 		"path": "pages/luntan/luntan",
 		"style": {
-			"navigationBarTitleText": "桂工小帮手",
+			"navigationBarTitleText": "小桂屋",
 			"enablePullDownRefresh": true,
 			"backgroundTextStyle": "dark"
 		}
 	}, {
 		"path": "pages/kebiao/kebiao",
 		"style": {
-			"navigationBarTitleText": "桂工小帮手",
+			"navigationBarTitleText": "课表",
 			"enablePullDownRefresh": true
 		}
 
