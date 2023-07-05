@@ -23,7 +23,12 @@
 		<view class="personInfo">
 
 			<view class="userInfo">
-				<image class="image-bg" src="http://124.220.207.245:8080/images/bizhi.png" mode="center"></image>
+				<!-- 早上 -->
+				<image class="image-bg" v-if="hours > 6 && hours < 11" src="http://124.220.207.245:8080/images/bizhi.png" mode="center"></image>
+				<!-- 中午和下午 -->
+				<image class="image-bg" v-else-if="hours > 11 && hours < 18" src="http://124.220.207.245:8080/images/bizhi.png" mode="center"></image>
+				<!-- 晚上 -->
+				<image class="image-bg" v-else src="http://124.220.207.245:8080/images/bizhi.png" mode="center"></image>
 				<view>
 					<image class="avatar" src="../../static/images/user/zhutou.jpg" mode="scaleToFill"></image>
 				</view>

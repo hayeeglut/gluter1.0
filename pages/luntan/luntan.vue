@@ -5,12 +5,13 @@
 	</view>
 	<view style="height: 100%">
 		<!-- 公告区 -->
-		<uni-notice-bar @click="notice()" background-color="#ecf9ff" single="true" color="#2979FF"
-			showGetMore="true" showIcon="true" text="论坛规则(暂行)"></uni-notice-bar>
-			
+		<uni-notice-bar @click="notice()" background-color="#ecf9ff" single="true" color="#2979FF" showGetMore="true"
+			showIcon="true" text="论坛规则(暂行)"></uni-notice-bar>
+
 		<!-- 通知公告弹出窗口 -->
 		<uni-popup ref="notice" type="dialog">
-			<uni-popup-dialog :type="msgType" cancelText="关闭" title="论坛守则(必看!!!)" @close="dialogClose" @confirm="dialogConfirm">
+			<uni-popup-dialog :type="msgType" cancelText="关闭" title="论坛守则(必看!!!)" @close="dialogClose"
+				@confirm="dialogConfirm">
 				<!-- 通知公告栏 -->
 				<view class="tongZhiGongGao">
 					<scroll-view scroll-y="true">
@@ -21,8 +22,8 @@
 				</view>
 			</uni-popup-dialog>
 		</uni-popup>
-		
-		
+
+
 		<!-- 块级区域 -->
 		<!-- 帖子区域 -->
 		<view class="tieZiBaBa" v-for="(item,tipId) in chatAreaList" :key="tipId" @click="jumpToTip(item)">
@@ -33,7 +34,7 @@
 					<view class="upTitle_id">
 						<text style="font-weight: bold;">帖子ID: </text>{{ item.tipId }}
 					</view>
-					
+
 					<!-- 时间 -->
 					<view class="lastTime">
 						<text style="font-weight: bold;">更新时间: </text>{{ item.upDateTime }}
@@ -59,7 +60,7 @@
 				<view class="dianZan">
 					<!-- 点赞图片 -->
 					<!-- <image class="like_love" src="../../static/chatArea/love.png" mode="scaleToFill"></image> -->
-					
+
 					<!-- 点赞数量计数 -->
 					<!-- <view class="like_number">
 						{{ item.love }}
@@ -70,9 +71,9 @@
 						<image class="like_love" src="../../static/chatArea/list.png" mode="scaleToFill"></image>
 						<text style="float: right;margin: 0 10rpx 0 0;">{{ item.replyCount }}</text>
 					</view>
-					
+
 					<!-- 帖子tag -->
-					<view class="commonTag">
+					<view :class="item.tag == '#聊天灌水' ? 'talkTag' : item.tag == '#寻物/失物' ? 'lookforTag' : item.tag == '#跳蚤市场' ? 'shopTag' : 'bugTag'">
 						<text style="font-weight: bold;"></text>{{ item.tag }}
 					</view>
 
@@ -104,7 +105,7 @@
 				startPage: 0,
 				//openid
 				openid: "",
-				chatAreaRules:[],//社区守则
+				chatAreaRules: [], //社区守则
 				photoServerUrl: "http://124.220.207.245:8080/images/" //图片服务器
 
 			}
@@ -117,7 +118,7 @@
 			//获取localStorage的openid
 			that.openid = uni.getStorageSync("openid");
 			console.log(that.openid)
-			if(that.openid==""){
+			if (that.openid == "") {
 				uni.reLaunch({
 					url: "/pages/user/user"
 				})
@@ -178,7 +179,7 @@
 				this.$refs.notice.open()
 			},
 			//获取论坛规则
-			getChatAreaRules(){
+			getChatAreaRules() {
 				var that = this
 				uni.request({
 					url: "https://neeeeeeebs.fit:8088/tongZhi/getChatAreaRules",
@@ -187,23 +188,23 @@
 					},
 					method: 'POST',
 					success: (res) => {
-						if(res.data.a){
-							that.chatAreaRules=res.data.data;
+						if (res.data.a) {
+							that.chatAreaRules = res.data.data;
 							//当thatAreaRules准备好后调用notice，让用户强制浏览论坛守则
-							var interval = setInterval(function(){
-								if(that.chatAreaRules!=null)
-								that.notice()
+							var interval = setInterval(function() {
+								if (that.chatAreaRules != null)
+									that.notice()
 								//首先去结束定时器
 								clearInterval(interval)
-							},200)
+							}, 200)
 						}
 					}
 				})
 			},
 			//跳转至发布帖子页面
-			jumpToFaBu(){
+			jumpToFaBu() {
 				uni.navigateTo({
-					url:"/pages/Fabu/Fabu"
+					url: "/pages/Fabu/Fabu"
 				})
 			},
 			//跳转去详细帖子
@@ -247,14 +248,15 @@
 									.upDateTime = "三十分钟内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 3600) res.data.data[i]
 									.upDateTime = "一小时内"
-									if ((currentTime - res.data.data[i].upDateTime) / 1000 < 43200) res.data.data[i]
-										.upDateTime = "半天之内"
+								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 43200) res.data.data[
+										i]
+									.upDateTime = "半天之内"
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 < 86400) res.data.data[
 									i].upDateTime = "一天之内"
 								// 如果比一天还多 这条可以将时间戳转换成日期格式
 								if ((currentTime - res.data.data[i].upDateTime) / 1000 > 86400) res.data.data[
 									i].upDateTime = calculateWeek.formatTime(res.data.data[i].upDateTime);
-									
+
 								// 无论怎么样，upLoadTime也要转化
 								res.data.data[
 									i].upLoadTime = calculateWeek.formatTime(res.data.data[i].upLoadTime);
@@ -276,30 +278,32 @@
 		z-index: 0;
 		background-color: #f5f5f5;
 	}
-	
+
 	/* 通知公告栏 */
 	.tongZhiGongGao {
-	width: 100%;
-    margin: 0 auto;
-    padding: 10rpx 0 0 0;
+		width: 100%;
+		margin: 0 auto;
+		padding: 10rpx 0 0 0;
 	}
-	
+
 	.tongZhiGongGao .neiRong {
 		padding-right: 20rpx;
 		padding-top: 5rpx;
 	}
-	
+
 	.tongZhiGongGao scroll-view {
 		height: 800rpx;
 	}
+
 	/* 发布按钮 */
-	.fabuBTN image{
-		    width: 80rpx;
-		    height: 80rpx;
-		    position: fixed;
-		    left: 85%;
-		    top: 80%;
+	.fabuBTN image {
+		width: 80rpx;
+		height: 80rpx;
+		position: fixed;
+		left: 85%;
+		top: 80%;
 	}
+
 	/* 图片展示 */
 	.tieZiBaBa .photo {
 		margin-top: 5px;
@@ -423,29 +427,54 @@
 		display: flex;
 		position: relative;
 	}
-	
-	/* 主要tag */
-	.dianZan .mainTag{
+
+	/* tag:聊天灌水 */
+	.dianZan .talkTag {
+		margin-left: 4%;
 		width: 25%;
 		text-align: center;
-		background-color: lightgreen;
-		border-radius: 15% / 50%;
+		color: #ffffff;
+		background-color: #12ea0e;
+		border-radius: 5% / 15%;
 		font-size: 30rpx;
 	}
-	
-	/* 次要tag */
-	.dianZan .commonTag{
-		margin-left: 10%;
+
+	/* tag:寻物失物 */
+	.dianZan .lookforTag {
+		margin-left: 4%;
 		width: 25%;
 		text-align: center;
-		background-color: #8fe4ff;
-		border-radius: 2% / 50%;
+		color: #ffffff;
+		background-color: #55c7f7;
+		border-radius: 5% / 15%;
 		font-size: 30rpx;
 	}
-	
+
+	/* tag:跳蚤市场 */
+	.dianZan .shopTag {
+		margin-left: 4%;
+		width: 25%;
+		text-align: center;
+		color: #ffffff;
+		background-color: #bca7fc;
+		border-radius: 5% / 15%;
+		font-size: 30rpx;
+	}
+
+	/* tag:bug反馈 */
+	.dianZan .bugTag {
+		margin-left: 4%;
+		width: 25%;
+		text-align: center;
+		color: #ffffff;
+		background-color: #f05f1c;
+		border-radius: 5% / 15%;
+		font-size: 30rpx;
+	}
+
 	/* 进入评论区旁边那个计数 */
 	.dianZan .reply_number {
-		width: 12%;
+		width: 15%;
 		font-size: 30rpx;
 		/* text-align: center; */
 
